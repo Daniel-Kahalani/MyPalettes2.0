@@ -1,0 +1,139 @@
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { login } from '../../features/paletteList/slices/userSlice';
+import useInputState from '../../hooks/useInputState';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import {
+	Link,
+	Typography,
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogTitle,
+	CircularProgress,
+	InputAdornment,
+} from '@mui/material';
+
+import LockIcon from '@mui/icons-material/Lock';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+
+export default function LoginDialog({ toogleDialog, switchToLogin }) {
+	const { error, loading } = useSelector((state) => state.user);
+	const dispatch = useDispatch();
+	const [email, handleEmailChange, resetEmail] = useInputState('');
+	const [password, handlePasswordChange, resetPassword] = useInputState('');
+	const inputStyle = { WebkitBoxShadow: '0 0 0 1000px white inset' };
+
+	const resetInputs = () => {
+		resetPassword();
+		resetEmail();
+	};
+
+	const handleClose = () => {
+		resetInputs();
+		toogleDialog();
+	};
+
+	const handleSubmit = async () => {
+		const resultAction = await dispatch(login({ email, password }));
+		if (login.fulfilled.match(resultAction)) {
+			resetInputs();
+			toogleDialog();
+		}
+	};
+
+	const handleSwitchDialog = () => {
+		resetInputs();
+		switchToLogin();
+	};
+
+	return (
+		<Dialog
+			open={true}
+			onClose={handleClose}
+			fullWidth={true}
+			maxWidth={'xs'}
+			aria-labelledby='form-dialog-title'>
+			<DialogTitle id='form-dialog-title'>My Palettes</DialogTitle>
+			<ValidatorForm onSubmit={handleSubmit}>
+				<DialogContent>
+					<Typography variant='body1' sx={{ marginBottom: '1rem' }}>
+						Sign in to find new palettes.
+					</Typography>
+					<TextValidator
+						name='email'
+						label='Email'
+						onChange={handleEmailChange}
+						value={email}
+						fullWidth
+						margin='normal'
+						validators={['required']}
+						errorMessages={['Enter email']}
+						inputProps={{ style: inputStyle }}
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position='start'>
+									<MailOutlineIcon />
+								</InputAdornment>
+							),
+						}}
+					/>
+					<TextValidator
+						name='password'
+						label='Password'
+						type='password'
+						onChange={handlePasswordChange}
+						value={password}
+						fullWidth
+						margin='normal'
+						validators={['required']}
+						errorMessages={['Enter password']}
+						inputProps={{ style: inputStyle }}
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position='start'>
+									<LockIcon />
+								</InputAdornment>
+							),
+						}}
+					/>
+					<Link
+						component='button'
+						variant='caption'
+						onClick={handleSwitchDialog}>
+						Dont have an account
+					</Link>
+				</DialogContent>
+				<DialogActions
+					sx={{
+						flex: 1,
+						alignItems: 'center',
+						flexDirection: 'column',
+					}}>
+					{loading ? (
+						<CircularProgress />
+					) : (
+						<>
+							{error && (
+								<Typography
+									color='error'
+									variant='body2'
+									mb={1}>
+									{error.message}
+								</Typography>
+							)}
+							<Button
+								variant='contained'
+								color='primary'
+								type='submit'
+								fullWidth={true}>
+								SIGN IN
+							</Button>
+						</>
+					)}
+				</DialogActions>
+			</ValidatorForm>
+		</Dialog>
+	);
+}
