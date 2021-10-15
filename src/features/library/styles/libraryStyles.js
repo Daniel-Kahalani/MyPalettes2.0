@@ -1,7 +1,7 @@
 import { styled } from '@mui/system';
 import bg from '../../../assets/bg.svg';
 
-export const PaletteListContainer = styled('div')({
+export const LibraryContainer = styled('div')({
 	height: '100vh',
 	display: 'flex',
 	flexDirection: 'column',

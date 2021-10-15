@@ -3,14 +3,10 @@ import {
 	getFirestore,
 	collection,
 	query,
-	doc,
-	getDoc,
 	getDocs,
 	addDoc,
-	updateDoc,
 	where,
 	limit,
-	arrayUnion,
 } from 'firebase/firestore';
 import {
 	getAuth,
@@ -42,9 +38,11 @@ export const register = createAsyncThunk(
 				email: userCredential.user.email,
 				firstName: '',
 				lastName: '',
-				library: [],
 			};
-			const newUserDoc = await addDoc(collection(db, 'users'), userData);
+			const newUserDoc = await addDoc(collection(db, 'users'), {
+				...userData,
+				library: [],
+			});
 			return { id: newUserDoc.id, ...userData };
 		} catch (e) {
 			throw rejectWithValue(e);
@@ -72,7 +70,8 @@ export const login = createAsyncThunk(
 					)
 				)
 			).docs[0];
-			return { id: userDoc.id, ...userDoc.data() };
+			const { library, ...userData } = userDoc.data();
+			return { id: userDoc.id, ...userData };
 		} catch (e) {
 			throw rejectWithValue(e);
 		}
@@ -98,29 +97,6 @@ export const logout = createAsyncThunk('user/logout', async () => {
 	const auth = getAuth();
 	await signOut(auth);
 });
-
-export const addPaletteToLibrary = createAsyncThunk(
-	'palettes/addPaletteToLibrary',
-	async (paletteId, { getState, rejectWithValue }) => {
-		try {
-			const {
-				user: { info },
-			} = getState();
-			const db = getFirestore();
-			await updateDoc(doc(db, 'users', info.id), {
-				library: arrayUnion(paletteId),
-			});
-			const userDoc = await getDoc(doc(db, 'users', info.id));
-			return userDoc.data().library;
-		} catch (e) {
-			throw rejectWithValue(
-				new Error(
-					'Unable to load the palettes,\n please try to refresh'
-				)
-			);
-		}
-	}
-);
 
 const userSlice = createSlice({
 	name: 'user',
@@ -182,18 +158,6 @@ const userSlice = createSlice({
 			state.isAuthenticated = false;
 			state.error = initialState.error;
 			state.loading = initialState.loading;
-		},
-		[addPaletteToLibrary.pending]: (state, action) => {
-			state.error = null;
-		},
-		[addPaletteToLibrary.fulfilled]: (state, action) => {
-			state.info.library = action.payload;
-		},
-		[addPaletteToLibrary.rejected]: (state, action) => {
-			state.error = {
-				message: action.payload.message,
-				code: action.payload.code,
-			};
 		},
 	},
 });

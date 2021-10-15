@@ -5,7 +5,6 @@ const initialState = {
 	list: [],
 	error: null,
 	loading: null,
-	success: null,
 };
 
 export const getPalettesList = createAsyncThunk(
@@ -38,7 +37,6 @@ const palettesSlice = createSlice({
 			state.list = initialState.list;
 			state.error = initialState.error;
 			state.loading = initialState.loading;
-			state.success = initialState.success;
 		},
 	},
 	extraReducers: {

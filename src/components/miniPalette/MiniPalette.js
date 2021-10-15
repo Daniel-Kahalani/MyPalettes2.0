@@ -17,11 +17,10 @@ export default function MiniPalette({
 	name,
 	emoji,
 	handleIconClick,
-	openDeleteDialog,
+	isDeleteable,
 }) {
 	const { isAuthenticated } = useSelector((state) => state.user);
 	const history = useHistory();
-	const isDeleteable = openDeleteDialog ? true : false;
 
 	const onIconClick = (e) => {
 		e.stopPropagation();

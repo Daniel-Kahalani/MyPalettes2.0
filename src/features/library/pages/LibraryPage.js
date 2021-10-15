@@ -1,50 +1,59 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPalettesList } from '../slices/palettesSlice';
-import { addPaletteToLibrary } from '../../library/slices/librarySlice';
+import {
+	removePaletteToLibrary,
+	getLibraryPalettesList,
+} from '../slices/librarySlice';
 import useToggleState from '../../../hooks/useToggleState';
 import animationData from '../../../assets/sad-face.json';
 import Lottie from 'react-lottie';
+import RemovePaletteDialog from '../components/RemovePaletteDialog';
 import Navbar from '../../../components/navbar/Navbar';
 import MiniPalette from '../../../components/miniPalette/MiniPalette';
 import Snackbar from '../../../components/snackbar/Snackbar';
 import { Fade, Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import {
-	PaletteListContainer,
-	PalettesContainer,
-} from '../styles/paletteListStyles';
+import { LibraryContainer, PalettesContainer } from '../styles/libraryStyles';
 
-export default function PaletteListPage() {
+export default function LibraryPage() {
 	const dispatch = useDispatch();
-	const { loading, error, list } = useSelector((state) => state.palettes);
+	const { loading, error, list } = useSelector((state) => state.library);
+	const [removePaletteDialogOpen, toggleRemovePaletteDialogOpen] =
+		useToggleState([false, true]);
+	const [paletteToRemove, setPaletteToRemove] = useState({
+		id: null,
+		name: null,
+	});
 	const [snackbarOpen, toggleSnackbarOpen] = useToggleState([false, true]);
 	const [snackbarMsg, setSnackbarMsg] = useState('');
 	const [snackbarType, setSnackbarType] = useState('success');
 
 	const handleIconClick = async (paletteId, paletteName) => {
-		const resultAction = await dispatch(addPaletteToLibrary(paletteId));
-		if (addPaletteToLibrary.fulfilled.match(resultAction)) {
-			setSnackbarMsg(
-				`"${paletteName}" palette was added to your library!`
-			);
+		setPaletteToRemove({ id: paletteId, name: paletteName });
+		toggleRemovePaletteDialogOpen();
+	};
+
+	const handleRemoveFeedback = (resultAction) => {
+		if (removePaletteToLibrary.fulfilled.match(resultAction)) {
 			setSnackbarType('success');
+			setSnackbarMsg(
+				`"${paletteToRemove.name}" palette was remove from your library!`
+			);
 		} else {
 			setSnackbarMsg(
-				`Unable to add "${paletteName}" palette to your library, please try again`
+				`Unable to remove "${paletteToRemove.name}" palette from your library, please try again`
 			);
 			setSnackbarType('error');
 		}
-
 		toggleSnackbarOpen();
 	};
 
 	useEffect(() => {
-		dispatch(getPalettesList());
+		dispatch(getLibraryPalettesList());
 	}, [dispatch]);
 
 	return (
-		<PaletteListContainer>
+		<LibraryContainer>
 			<Navbar />
 			<PalettesContainer
 				sx={{ width: { xs: '50%', sm: '40%', md: '50%' } }}>
@@ -92,7 +101,7 @@ export default function PaletteListPage() {
 										<MiniPalette
 											{...palette}
 											handleIconClick={handleIconClick}
-											isDeleteable={false}
+											isDeleteable={true}
 										/>
 									</Grid>
 								))}
@@ -106,6 +115,12 @@ export default function PaletteListPage() {
 				toggleOpen={toggleSnackbarOpen}
 				type={snackbarType}
 			/>
-		</PaletteListContainer>
+			<RemovePaletteDialog
+				open={removePaletteDialogOpen}
+				toggleOpen={toggleRemovePaletteDialogOpen}
+				paletteId={paletteToRemove.id}
+				handleRemoveFeedback={handleRemoveFeedback}
+			/>
+		</LibraryContainer>
 	);
 }
