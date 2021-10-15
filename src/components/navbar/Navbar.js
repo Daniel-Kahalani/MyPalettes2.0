@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../features/paletteList/slices/userSlice';
 import { useHistory, Link as RouterLink } from 'react-router-dom';
-import useToogleState from '../../hooks/useToogleState';
+import useToggleState from '../../hooks/useToggleState';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -16,15 +16,15 @@ export default function Navbar() {
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const { isAuthenticated } = useSelector((state) => state.user);
-	const [loginDialog, toogleLoginDialog] = useToogleState([false, true]);
-	const [registerDialog, toogleRegisterDialog] = useToogleState([
+	const [loginDialog, toggleLoginDialog] = useToggleState([false, true]);
+	const [registerDialog, toggleRegisterDialog] = useToggleState([
 		false,
 		true,
 	]);
 
 	const handleUserFeature = (e) => {
 		if (!isAuthenticated) {
-			toogleLoginDialog();
+			toggleLoginDialog();
 			e.preventDefault();
 		}
 	};
@@ -35,13 +35,8 @@ export default function Navbar() {
 	};
 
 	const switchDialog = () => {
-		// if (loginDialog) {
-		toogleLoginDialog();
-		toogleRegisterDialog();
-		// } else {
-		// 	toogleRegisterDialog();
-		// 	toogleLoginDialog();
-		// }
+		toggleLoginDialog();
+		toggleRegisterDialog();
 	};
 
 	return (
@@ -91,12 +86,12 @@ export default function Navbar() {
 						<>
 							<Button
 								sx={{ color: 'common.white' }}
-								onClick={toogleRegisterDialog}>
+								onClick={toggleRegisterDialog}>
 								SIGN UP
 							</Button>
 							<Button
 								sx={{ color: 'common.white' }}
-								onClick={toogleLoginDialog}>
+								onClick={toggleLoginDialog}>
 								SIGN IN
 							</Button>
 						</>
@@ -105,13 +100,13 @@ export default function Navbar() {
 			</AppBar>
 			{registerDialog && (
 				<RegisterDialog
-					toogleDialog={toogleRegisterDialog}
+					toogleDialog={toggleRegisterDialog}
 					switchToLogin={switchDialog}
 				/>
 			)}
 			{loginDialog && (
 				<LoginDialog
-					toogleDialog={toogleLoginDialog}
+					toogleDialog={toggleLoginDialog}
 					switchToLogin={switchDialog}
 				/>
 			)}

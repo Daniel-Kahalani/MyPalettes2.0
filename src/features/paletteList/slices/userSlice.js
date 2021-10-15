@@ -1,5 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
+	getFirestore,
+	collection,
+	query,
+	doc,
+	getDoc,
+	getDocs,
+	addDoc,
+	updateDoc,
+	where,
+	limit,
+	arrayUnion,
+} from 'firebase/firestore';
+import {
 	getAuth,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
@@ -23,10 +36,16 @@ export const register = createAsyncThunk(
 				email,
 				password
 			);
-			return {
+			const db = getFirestore();
+			const userData = {
 				uid: userCredential.user.uid,
 				email: userCredential.user.email,
+				firstName: '',
+				lastName: '',
+				library: [],
 			};
+			const newUserDoc = await addDoc(collection(db, 'users'), userData);
+			return { id: newUserDoc.id, ...userData };
 		} catch (e) {
 			throw rejectWithValue(e);
 		}
@@ -43,10 +62,17 @@ export const login = createAsyncThunk(
 				email,
 				password
 			);
-			return {
-				uid: userCredential.user.uid,
-				email: userCredential.user.email,
-			};
+			const db = getFirestore();
+			const userDoc = (
+				await getDocs(
+					query(
+						collection(db, 'users'),
+						where('uid', '==', userCredential.user.uid),
+						limit(1)
+					)
+				)
+			).docs[0];
+			return { id: userDoc.id, ...userDoc.data() };
 		} catch (e) {
 			throw rejectWithValue(e);
 		}
@@ -73,6 +99,29 @@ export const logout = createAsyncThunk('user/logout', async () => {
 	await signOut(auth);
 });
 
+export const addPaletteToLibrary = createAsyncThunk(
+	'palettes/addPaletteToLibrary',
+	async (paletteId, { getState, rejectWithValue }) => {
+		try {
+			const {
+				user: { info },
+			} = getState();
+			const db = getFirestore();
+			await updateDoc(doc(db, 'users', info.id), {
+				library: arrayUnion(paletteId),
+			});
+			const userDoc = await getDoc(doc(db, 'users', info.id));
+			return userDoc.data().library;
+		} catch (e) {
+			throw rejectWithValue(
+				new Error(
+					'Unable to load the palettes,\n please try to refresh'
+				)
+			);
+		}
+	}
+);
+
 const userSlice = createSlice({
 	name: 'user',
 	initialState,
@@ -85,7 +134,6 @@ const userSlice = createSlice({
 		[register.pending]: (state, action) => {
 			state.error = null;
 			state.loading = true;
-			// state.isAuthenticated = state.isAuthenticated;
 		},
 		[register.fulfilled]: (state, action) => {
 			state.loading = false;
@@ -103,7 +151,6 @@ const userSlice = createSlice({
 		[login.pending]: (state, action) => {
 			state.error = null;
 			state.loading = true;
-			// state.isAuthenticated = state.isAuthenticated;
 		},
 		[login.fulfilled]: (state, action) => {
 			state.loading = false;
@@ -135,6 +182,18 @@ const userSlice = createSlice({
 			state.isAuthenticated = false;
 			state.error = initialState.error;
 			state.loading = initialState.loading;
+		},
+		[addPaletteToLibrary.pending]: (state, action) => {
+			state.error = null;
+		},
+		[addPaletteToLibrary.fulfilled]: (state, action) => {
+			state.info.library = action.payload;
+		},
+		[addPaletteToLibrary.rejected]: (state, action) => {
+			state.error = {
+				message: action.payload.message,
+				code: action.payload.code,
+			};
 		},
 	},
 });
