@@ -25,7 +25,7 @@ export default function MiniPalette({
 
 	const onIconClick = (e) => {
 		e.stopPropagation();
-		handleIconClick(id);
+		handleIconClick(id, name);
 	};
 
 	const goToPalette = () => {
