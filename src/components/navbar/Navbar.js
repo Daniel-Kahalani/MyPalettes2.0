@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../features/paletteList/slices/userSlice';
 import { useHistory, Link as RouterLink } from 'react-router-dom';
@@ -16,14 +16,16 @@ export default function Navbar() {
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const { isAuthenticated } = useSelector((state) => state.user);
+	const [redirect, serRedirect] = useState(null);
 	const [loginDialog, toggleLoginDialog] = useToggleState([false, true]);
 	const [registerDialog, toggleRegisterDialog] = useToggleState([
 		false,
 		true,
 	]);
 
-	const handleUserFeature = (e) => {
+	const handleUserFeature = (e, redirectToPage) => {
 		if (!isAuthenticated) {
+			serRedirect(redirectToPage);
 			toggleLoginDialog();
 			e.preventDefault();
 		}
@@ -62,7 +64,7 @@ export default function Navbar() {
 						component={RouterLink}
 						underline='none'
 						color='common.white'
-						onClick={handleUserFeature}>
+						onClick={(e) => handleUserFeature(e, 'palettes/new')}>
 						<Button sx={{ color: 'common.white' }}>
 							Create Palette
 						</Button>
@@ -73,7 +75,7 @@ export default function Navbar() {
 						component={RouterLink}
 						underline='none'
 						color='primary'
-						onClick={handleUserFeature}>
+						onClick={(e) => handleUserFeature(e, 'library')}>
 						<Button sx={{ color: 'common.white' }}>Library</Button>
 					</Link>
 					{isAuthenticated ? (
@@ -102,12 +104,14 @@ export default function Navbar() {
 				<RegisterDialog
 					toogleDialog={toggleRegisterDialog}
 					switchToLogin={switchDialog}
+					redirect={redirect}
 				/>
 			)}
 			{loginDialog && (
 				<LoginDialog
 					toogleDialog={toggleLoginDialog}
 					switchToLogin={switchDialog}
+					redirect={redirect}
 				/>
 			)}
 		</Box>

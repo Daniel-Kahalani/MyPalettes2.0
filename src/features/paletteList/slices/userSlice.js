@@ -45,7 +45,17 @@ export const register = createAsyncThunk(
 			});
 			return { id: newUserDoc.id, ...userData };
 		} catch (e) {
-			throw rejectWithValue(e);
+			if (e.code === 'auth/email-already-in-use') {
+				throw rejectWithValue({
+					message: 'Account with this email already exists',
+					code: 100,
+				});
+			} else {
+				throw rejectWithValue({
+					message: 'Unable to sign up, please try again',
+					code: 101,
+				});
+			}
 		}
 	}
 );
@@ -73,30 +83,47 @@ export const login = createAsyncThunk(
 			const { library, ...userData } = userDoc.data();
 			return { id: userDoc.id, ...userData };
 		} catch (e) {
+			console.log(e.code);
+			if (
+				e.code === 'auth/user-not-found' ||
+				e.code === 'auth/wrong-password'
+			) {
+				throw rejectWithValue({
+					message: 'Invalid email/password',
+					code: 102,
+				});
+			} else {
+				throw rejectWithValue({
+					message: 'Unable to sign in, please try again',
+					code: 103,
+				});
+			}
+		}
+	}
+);
+
+export const isLoggedIn = createAsyncThunk('user/isLoggedIn', async () => {
+	const auth = getAuth();
+	const user = auth.currentUser;
+	return !user
+		? null
+		: {
+				uid: user.uid,
+				email: user.email,
+		  };
+});
+
+export const logout = createAsyncThunk(
+	'user/logout',
+	async (_, { rejectWithValue }) => {
+		try {
+			const auth = getAuth();
+			await signOut(auth);
+		} catch (e) {
 			throw rejectWithValue(e);
 		}
 	}
 );
-
-export const isLoggedIn = createAsyncThunk(
-	'user/isLoggedIn',
-	async (_, { rejectWithValue }) => {
-		const auth = getAuth();
-		const user = auth.currentUser;
-		if (!user) {
-			throw rejectWithValue();
-		}
-		return {
-			uid: user.uid,
-			email: user.email,
-		};
-	}
-);
-
-export const logout = createAsyncThunk('user/logout', async () => {
-	const auth = getAuth();
-	await signOut(auth);
-});
 
 const userSlice = createSlice({
 	name: 'user',
@@ -149,15 +176,18 @@ const userSlice = createSlice({
 				state.isAuthenticated = false;
 			}
 		},
-		[isLoggedIn.rejected]: (state, action) => {
-			state.isAuthenticated = false;
-		},
 		[logout.fulfilled]: (state, action) => {
 			state.info = initialState.info;
 			state.photo = initialState.photo;
 			state.isAuthenticated = false;
 			state.error = initialState.error;
 			state.loading = initialState.loading;
+		},
+		[logout.rejected]: (state, action) => {
+			state.error = {
+				message: action.payload.message,
+				code: action.payload.code,
+			};
 		},
 	},
 });

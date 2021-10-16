@@ -3,13 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getPalettesList } from '../slices/palettesSlice';
 import { addPaletteToLibrary } from '../../library/slices/librarySlice';
 import useToggleState from '../../../hooks/useToggleState';
-import animationData from '../../../assets/sad-face.json';
-import Lottie from 'react-lottie';
 import Navbar from '../../../components/navbar/Navbar';
+import ErrorAnimation from '../../../components/errorAnimation/ErrorAnimation';
 import MiniPalette from '../../../components/miniPalette/MiniPalette';
 import Snackbar from '../../../components/snackbar/Snackbar';
-import { Fade, Grid, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import { Fade, Grid } from '@mui/material';
 import {
 	PaletteListContainer,
 	PalettesContainer,
@@ -21,7 +19,6 @@ export default function PaletteListPage() {
 	const [snackbarOpen, toggleSnackbarOpen] = useToggleState([false, true]);
 	const [snackbarMsg, setSnackbarMsg] = useState('');
 	const [snackbarType, setSnackbarType] = useState('success');
-
 	const handleIconClick = async (paletteId, paletteName) => {
 		const resultAction = await dispatch(addPaletteToLibrary(paletteId));
 		if (addPaletteToLibrary.fulfilled.match(resultAction)) {
@@ -50,32 +47,7 @@ export default function PaletteListPage() {
 				sx={{ width: { xs: '50%', sm: '40%', md: '50%' } }}>
 				{!loading &&
 					(error ? (
-						<Box
-							sx={{
-								display: 'flex',
-								flexDirection: 'column',
-								justifyContent: 'center',
-								alignItems: 'center',
-							}}>
-							<Lottie
-								options={{
-									loop: false,
-									autoplay: true,
-									animationData: animationData,
-									rendererSettings: {
-										preserveAspectRatio: 'xMidYMid slice',
-									},
-								}}
-								height={400}
-								width={400}
-							/>
-							<Typography variant='h3'>
-								Something went wrong,
-							</Typography>
-							<Typography variant='h3'>
-								please try to refresh
-							</Typography>
-						</Box>
+						<ErrorAnimation />
 					) : (
 						<Fade in={true} timeout={1500}>
 							<Grid

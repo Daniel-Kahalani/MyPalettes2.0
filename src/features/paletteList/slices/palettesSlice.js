@@ -17,11 +17,7 @@ export const getPalettesList = createAsyncThunk(
 				return { id: doc.id, ...doc.data() };
 			});
 		} catch (e) {
-			throw rejectWithValue(
-				new Error(
-					'Unable to load the palettes,\n please try to refresh'
-				)
-			);
+			throw rejectWithValue(e);
 		}
 	}
 );

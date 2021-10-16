@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { register } from '../../features/paletteList/slices/userSlice';
 import useInputState from '../../hooks/useInputState';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
@@ -18,9 +19,14 @@ import {
 import LockIcon from '@mui/icons-material/Lock';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
-export default function RegisterDialog({ toogleDialog, switchToLogin }) {
+export default function RegisterDialog({
+	toogleDialog,
+	switchToLogin,
+	redirect,
+}) {
 	const { error, loading } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
+	const history = useHistory();
 	// const [username, handleUsernameChange, resetUsername] = useInputState('');
 	const [email, handleEmailChange, resetEmail] = useInputState('');
 	const [password, handlePasswordChange, resetPassword] = useInputState('');
@@ -42,6 +48,9 @@ export default function RegisterDialog({ toogleDialog, switchToLogin }) {
 		if (register.fulfilled.match(resultAction)) {
 			resetInputs();
 			toogleDialog();
+			if (redirect) {
+				history.push(redirect);
+			}
 		}
 	};
 

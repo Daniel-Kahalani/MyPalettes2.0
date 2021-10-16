@@ -31,23 +31,19 @@ export const getLibraryPalettesList = createAsyncThunk(
 			const { library } = (
 				await getDoc(doc(db, 'users', info.id))
 			).data();
-			const palettesDocs = (
-				await getDocs(
-					query(
-						collection(db, 'palettes'),
-						where('__name__', 'in', library)
-					)
-				)
-			).docs;
-			return palettesDocs.map((doc) => {
-				return { id: doc.id, ...doc.data() };
-			});
-		} catch (e) {
-			throw rejectWithValue(
-				new Error(
-					'Unable to load the palettes,\n please try to refresh'
+			const palettesSnapshot = await getDocs(
+				query(
+					collection(db, 'palettes'),
+					where('__name__', 'in', library)
 				)
 			);
+			return !palettesSnapshot.empty
+				? palettesSnapshot.docs.map((doc) => {
+						return { id: doc.id, ...doc.data() };
+				  })
+				: [];
+		} catch (e) {
+			throw rejectWithValue(e);
 		}
 	}
 );
@@ -64,7 +60,7 @@ export const addPaletteToLibrary = createAsyncThunk(
 				library: arrayUnion(paletteId),
 			});
 		} catch (e) {
-			throw rejectWithValue(new Error());
+			throw rejectWithValue(e);
 		}
 	}
 );
@@ -83,7 +79,7 @@ export const removePaletteToLibrary = createAsyncThunk(
 			});
 			return list.filter((palette) => palette.id !== paletteId);
 		} catch (e) {
-			throw rejectWithValue(new Error());
+			throw rejectWithValue(e);
 		}
 	}
 );

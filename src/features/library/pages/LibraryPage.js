@@ -5,14 +5,13 @@ import {
 	getLibraryPalettesList,
 } from '../slices/librarySlice';
 import useToggleState from '../../../hooks/useToggleState';
-import animationData from '../../../assets/sad-face.json';
-import Lottie from 'react-lottie';
 import RemovePaletteDialog from '../components/RemovePaletteDialog';
+import EmptyAnimation from '../components/EmptyAnimation';
 import Navbar from '../../../components/navbar/Navbar';
+import ErrorAnimation from '../../../components/errorAnimation/ErrorAnimation';
 import MiniPalette from '../../../components/miniPalette/MiniPalette';
 import Snackbar from '../../../components/snackbar/Snackbar';
-import { Fade, Grid, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import { Fade, Grid } from '@mui/material';
 import { LibraryContainer, PalettesContainer } from '../styles/libraryStyles';
 
 export default function LibraryPage() {
@@ -59,33 +58,8 @@ export default function LibraryPage() {
 				sx={{ width: { xs: '50%', sm: '40%', md: '50%' } }}>
 				{!loading &&
 					(error ? (
-						<Box
-							sx={{
-								display: 'flex',
-								flexDirection: 'column',
-								justifyContent: 'center',
-								alignItems: 'center',
-							}}>
-							<Lottie
-								options={{
-									loop: false,
-									autoplay: true,
-									animationData: animationData,
-									rendererSettings: {
-										preserveAspectRatio: 'xMidYMid slice',
-									},
-								}}
-								height={400}
-								width={400}
-							/>
-							<Typography variant='h3'>
-								Something went wrong,
-							</Typography>
-							<Typography variant='h3'>
-								please try to refresh
-							</Typography>
-						</Box>
-					) : (
+						<ErrorAnimation />
+					) : list.length > 0 ? (
 						<Fade in={true} timeout={1500}>
 							<Grid
 								container
@@ -107,6 +81,8 @@ export default function LibraryPage() {
 								))}
 							</Grid>
 						</Fade>
+					) : (
+						<EmptyAnimation />
 					))}
 			</PalettesContainer>
 			<Snackbar

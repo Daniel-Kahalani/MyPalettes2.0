@@ -7,7 +7,6 @@ export const PaletteListContainer = styled('div')({
 	flexDirection: 'column',
 	justifyContent: 'flex-start',
 	/* background by SVGBackgrounds.com */
-	// backgroundColor: '#394bad',
 	backgroundImage: `url(${bg})`,
 	overflow: 'auto',
 });
