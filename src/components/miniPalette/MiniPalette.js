@@ -12,23 +12,20 @@ import {
 } from './miniPaletteStyles';
 
 export default function MiniPalette({
-	id,
-	colors,
-	name,
-	emoji,
+	palette,
 	handleIconClick,
 	isDeleteable,
 }) {
 	const { isAuthenticated } = useSelector((state) => state.user);
 	const history = useHistory();
-
+	const { id, colors, name, emoji } = palette;
 	const onIconClick = (e) => {
 		e.stopPropagation();
 		handleIconClick(id, name);
 	};
 
 	const goToPalette = () => {
-		history.push(`palettes/${id}`);
+		history.push(`palettes/${id}`, { palette });
 	};
 
 	return (

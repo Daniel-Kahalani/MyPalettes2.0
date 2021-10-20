@@ -73,7 +73,7 @@ export default function LibraryPage() {
 										lg={4}
 										key={palette.id}>
 										<MiniPalette
-											{...palette}
+											palette={palette}
 											handleIconClick={handleIconClick}
 											isDeleteable={true}
 										/>

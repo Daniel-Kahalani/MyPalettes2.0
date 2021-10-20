@@ -62,7 +62,7 @@ export default function PaletteListPage() {
 										lg={4}
 										key={palette.id}>
 										<MiniPalette
-											{...palette}
+											palette={palette}
 											handleIconClick={handleIconClick}
 											isDeleteable={false}
 										/>
