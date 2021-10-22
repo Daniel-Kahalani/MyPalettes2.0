@@ -1,56 +1,27 @@
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useLocation } from 'react-router-dom';
+import { genarateExtendedPalette } from '../slices/paletteSlice';
 import PaletteNavbar from '../../../components/paletteNavbar/PaletteNavbar';
 import PaletteFooter from '../../../components/paletteFooter/PaletteFooter';
-
-// import { PalettesContext } from '../../contexts/palette.context';
-// import { FormatContext } from '../../contexts/format.context';
-// import { LevelContext } from '../../contexts/level.context';
-// import { generatePaletteWithShades } from '../../utils/colorHelper';
-// import { fetchPalette } from '../../api/palettes.js';
+import ColorBox from '../../../components/colorBox/ColorBox';
 // import ColorBox from './ColorBox';
-// import PaletteNavbar from './PaletteNavbar';
-// import PaletteFooter from './PaletteFooter';
-// import useStyles from '../../styles/palette/PaletteStyles';
+import { Fade, Grid, Paper, Zoom } from '@mui/material';
 
 export default function PalettePage() {
-	// const classes = useStyles();
+	const dispatch = useDispatch();
+	const { extendedPalette, level, format } = useSelector(
+		(state) => state.palette
+	);
+	const { id } = useParams();
 	const {
 		state: { palette },
 	} = useLocation();
-	console.log(palette);
-	// const [palette, changePalette] = useState('');
-	const { id } = useParams();
-	// const { level } = useContext(LevelContext);
-	// const { format } = useContext(FormatContext);
-	// const palettes = useContext(PalettesContext);
-	let colorBoxes;
 
-	// if (palette) {
-	// 	const { _id, colors } = palette;
-	// 	colorBoxes = colors[level].map((color) => (
-	// 		<ColorBox
-	// 			background={color[format]}
-	// 			name={color.name}
-	// 			key={color.id}
-	// 			moreURL={`/palettes/${_id}/${color.id}`}
-	// 			showFullPalette={true}
-	// 		/>
-	// 	));
-	// }
-
-	// useEffect(() => {
-	// 	const setPalette = async () => {
-	// 		let rawPalette;
-	// 		if (palettes.length === 0) {
-	// 			let { data } = await fetchPalette(id);
-	// 			rawPalette = data;
-	// 		} else rawPalette = palettes.find((palette) => palette._id === id);
-	// 		changePalette(generatePaletteWithShades(rawPalette));
-	// 	};
-	// 	setPalette();
-	// }, [id, palettes]);
+	useEffect(() => {
+		dispatch(genarateExtendedPalette(palette));
+	}, [dispatch, palette]);
 
 	return (
 		<Box
@@ -58,11 +29,38 @@ export default function PalettePage() {
 				height: '100vh',
 				display: 'flex',
 				flexDirection: 'column',
-				overflow: 'scroll',
 			}}>
 			<PaletteNavbar withSlider={false} />
-			<Box sx={{ flexGrow: 1 }}></Box>
-			{/* {/* <div className={classes.colors}>{palette && colorBoxes}</div> */}
+			<Box
+				sx={{
+					display: 'flex',
+					flexGrow: '1',
+				}}>
+				{extendedPalette && (
+					<Grid container>
+						{extendedPalette.colors[level].map((color) => (
+							<Grid
+								item
+								sx={{
+									width: {
+										xs: '100%',
+										sm: '50%',
+										md: '25%',
+										lg: '20%',
+									},
+								}}
+								key={color.id}>
+								<ColorBox
+									background={color[format]}
+									name={color.name}
+									moreURL={`/palettes/${id}/${color.id}`}
+									withMoreButton={true}
+								/>
+							</Grid>
+						))}
+					</Grid>
+				)}
+			</Box>
 			<PaletteFooter name={palette.name} emoji={palette.emoji} />
 		</Box>
 	);

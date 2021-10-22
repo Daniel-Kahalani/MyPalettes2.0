@@ -20,6 +20,7 @@ export default function PaletteNavbar({ withSlider }) {
 
 	return (
 		<AppBar
+			position='static'
 			sx={{
 				backgroundColor: 'common.white',
 				display: 'flex',
