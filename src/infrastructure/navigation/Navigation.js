@@ -5,6 +5,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import PaletteListPage from '../../features/paletteList/pages/PaletteListPage';
 import LibraryPage from '../../features/library/pages/LibraryPage';
 import PalettePage from '../../features/palette/pages/PalettePage';
+import ColorShadesPage from '../../features/palette/pages/ColorShadesPage';
 
 export default function Navigation() {
 	const { isAuthenticated } = useSelector((state) => state.user);
@@ -18,11 +19,11 @@ export default function Navigation() {
 			)}
 			{/* <Route path='/palettes/new' component={NewPaletteForm} /> */}
 			<Route exact path='/palettes/:id' component={PalettePage} />
-			{/*	<Route
+			<Route
 				exact
 				path='/palettes/:paletteId/:colorId'
-				component={SingleColorPalette}
-			/> */}
+				component={ColorShadesPage}
+			/>
 			<Route path='*'>
 				<Redirect to='/' />
 			</Route>

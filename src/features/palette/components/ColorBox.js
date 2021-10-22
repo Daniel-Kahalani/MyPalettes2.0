@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import useToggleState from '../../../hooks/useToggleState';
 import { Link as RouterLink } from 'react-router-dom';
 import CopiedAnimation from '../components/CopiedAnimation';
@@ -8,13 +9,14 @@ import { Button, Link, Typography } from '@mui/material';
 import chroma from 'chroma-js';
 
 export default function ColorBox({
+	id,
 	name,
 	background,
 	withMoreButton,
 	moreURL,
 }) {
+	const { palette } = useSelector((state) => state.palette);
 	const [copied, toogleCopied, reset] = useToggleState([false, true]);
-
 	const textColor =
 		chroma.contrast(background, 'white') < 4.5 ? 'grey.700' : 'grey.300';
 
@@ -74,7 +76,7 @@ export default function ColorBox({
 						}}
 						onClick={(e) => e.stopPropagation()}
 						component={RouterLink}
-						to={moreURL}
+						to={`/palettes/${palette.id}/${id}`}
 						underline='none'
 						color={textColor}>
 						MORE

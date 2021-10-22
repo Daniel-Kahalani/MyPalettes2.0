@@ -25,7 +25,7 @@ export default function MiniPalette({
 	};
 
 	const goToPalette = () => {
-		history.push(`palettes/${id}`, { palette });
+		history.push(`/palettes/${id}`);
 	};
 
 	return (

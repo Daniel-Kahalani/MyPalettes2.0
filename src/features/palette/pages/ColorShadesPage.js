@@ -1,21 +1,32 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getPalette } from '../slices/paletteSlice';
+import { getPalette, getColorShades } from '../slices/paletteSlice';
+import ColorBox from '../components/ColorBox';
 import PaletteNavbar from '../components/PaletteNavbar';
 import PaletteFooter from '../components/PaletteFooter';
-import ColorBox from '../components/ColorBox';
+import BackColorBox from '../components/BackColorBox';
 import { Box } from '@mui/system';
 import { Grid } from '@mui/material';
 
-export default function PalettePage() {
+export default function ColorShadesPage() {
 	const dispatch = useDispatch();
-	const { palette, level, format } = useSelector((state) => state.palette);
-	const { id } = useParams();
+	const { format, palette, shades } = useSelector((state) => state.palette);
+	const { paletteId, colorId } = useParams();
 
 	useEffect(() => {
-		dispatch(getPalette(id));
-	}, [dispatch, id]);
+		const fetchData = async () => {
+			if (!palette) {
+				const resultAction = await dispatch(getPalette(paletteId));
+				if (getPalette.fulfilled.match(resultAction)) {
+					dispatch(getColorShades(colorId));
+				}
+			} else if (!shades) {
+				dispatch(getColorShades(colorId));
+			}
+		};
+		fetchData();
+	}, [dispatch, colorId, paletteId, palette, shades]);
 
 	return (
 		<Box
@@ -24,15 +35,15 @@ export default function PalettePage() {
 				display: 'flex',
 				flexDirection: 'column',
 			}}>
-			<PaletteNavbar withSlider={true} />
+			<PaletteNavbar withSlider={false} />
 			<Box
 				sx={{
 					display: 'flex',
 					flexGrow: '1',
 				}}>
-				{palette && (
+				{shades && (
 					<Grid container>
-						{palette.colors[level].map((color) => (
+						{shades.map((shade) => (
 							<Grid
 								item
 								sx={{
@@ -43,15 +54,15 @@ export default function PalettePage() {
 										lg: '20%',
 									},
 								}}
-								key={color.id}>
+								key={shade.name}>
 								<ColorBox
-									id={color.id}
-									name={color.name}
-									background={color[format]}
-									withMoreButton={true}
+									name={shade.name}
+									background={shade[format]}
+									withMoreButton={false}
 								/>
 							</Grid>
 						))}
+						<BackColorBox />
 					</Grid>
 				)}
 			</Box>

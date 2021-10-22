@@ -7,7 +7,7 @@ function generatePaletteWithShades(staterPalette) {
 	}
 	let newPalette = {
 		name: staterPalette.name,
-		_id: staterPalette._id,
+		id: staterPalette.id,
 		emoji: staterPalette.emoji,
 		colors: {},
 	};

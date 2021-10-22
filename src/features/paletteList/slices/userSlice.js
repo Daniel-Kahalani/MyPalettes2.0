@@ -83,7 +83,6 @@ export const login = createAsyncThunk(
 			const { library, ...userData } = userDoc.data();
 			return { id: userDoc.id, ...userData };
 		} catch (e) {
-			console.log(e.code);
 			if (
 				e.code === 'auth/user-not-found' ||
 				e.code === 'auth/wrong-password'
