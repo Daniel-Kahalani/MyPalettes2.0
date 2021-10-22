@@ -1,13 +1,12 @@
-import { Box } from '@mui/system';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useLocation } from 'react-router-dom';
 import { genarateExtendedPalette } from '../slices/paletteSlice';
-import PaletteNavbar from '../../../components/paletteNavbar/PaletteNavbar';
-import PaletteFooter from '../../../components/paletteFooter/PaletteFooter';
-import ColorBox from '../../../components/colorBox/ColorBox';
-// import ColorBox from './ColorBox';
-import { Fade, Grid, Paper, Zoom } from '@mui/material';
+import PaletteNavbar from '../components/PaletteNavbar';
+import PaletteFooter from '../components/PaletteFooter';
+import ColorBox from '../components/ColorBox';
+import { Box } from '@mui/system';
+import { Grid } from '@mui/material';
 
 export default function PalettePage() {
 	const dispatch = useDispatch();

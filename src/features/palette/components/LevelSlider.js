@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setLevel } from '../../features/palette/slices/paletteSlice';
+import { setLevel } from '../slices/paletteSlice';
 import { Slider, Stack, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 

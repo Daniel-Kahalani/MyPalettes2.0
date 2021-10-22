@@ -1,9 +1,10 @@
 import React from 'react';
-import useToggleState from '../../hooks/useToggleState';
+import useToggleState from '../../../hooks/useToggleState';
 import { Link as RouterLink } from 'react-router-dom';
+import CopiedAnimation from '../components/CopiedAnimation';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Box } from '@mui/system';
-import { Button, Link, Typography, Zoom } from '@mui/material';
+import { Button, Link, Typography } from '@mui/material';
 import chroma from 'chroma-js';
 
 export default function ColorBox({
@@ -37,37 +38,10 @@ export default function ColorBox({
 						opacity: 1,
 					},
 				}}>
-				<Zoom in={copied}>
-					<Box
-						sx={{
-							position: 'fixed',
-							display: 'flex',
-							flexDirection: 'column',
-							justifyContent: 'center',
-							alignItems: 'center',
-							top: 0,
-							left: 0,
-							zIndex: 10,
-							width: '100%',
-							height: '100%',
-							backgroundColor: background,
-						}}>
-						<Typography
-							variant='h1'
-							sx={{
-								width: '100%',
-								textAlign: 'center',
-								fontWeight: '400',
-								margin: '1rem',
-								padding: '1rem',
-								textShadow: '1px 2px black',
-								background: 'rgba(255, 255, 255, 0.2)',
-							}}>
-							COPIED
-						</Typography>
-						<Typography variant='h4'>{background}</Typography>
-					</Box>
-				</Zoom>
+				<CopiedAnimation
+					backgroundColor={background}
+					isCopied={copied}
+				/>
 				<Typography
 					sx={{
 						position: 'absolute',

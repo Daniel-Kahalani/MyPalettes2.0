@@ -1,10 +1,10 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setFormat } from '../../features/palette/slices/paletteSlice';
-import useToggleState from '../../hooks/useToggleState';
+import { setFormat } from '../slices/paletteSlice';
+import useToggleState from '../../../hooks/useToggleState';
 import { Link as RouterLink } from 'react-router-dom';
 import LevelSlider from './LevelSlider';
-import Snackbar from '../snackbar/Snackbar';
+import Snackbar from '../../../components/snackbar/Snackbar';
 import { AppBar, Toolbar, Link, Select, MenuItem } from '@mui/material';
 import { Box } from '@mui/system';
 
