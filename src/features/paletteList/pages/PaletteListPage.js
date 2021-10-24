@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getPalettesList } from '../slices/palettesSlice';
 import { addPaletteToLibrary } from '../../library/slices/librarySlice';
 import useToggleState from '../../../hooks/useToggleState';
+import { SNACKBAR_TYPE } from '../../../utils/constants';
 import Navbar from '../../../components/navbar/Navbar';
 import ErrorAnimation from '../../../components/errorAnimation/ErrorAnimation';
 import MiniPalette from '../../../components/miniPalette/MiniPalette';
@@ -18,19 +19,19 @@ export default function PaletteListPage() {
 	const { loading, error, list } = useSelector((state) => state.palettes);
 	const [snackbarOpen, toggleSnackbarOpen] = useToggleState([false, true]);
 	const [snackbarMsg, setSnackbarMsg] = useState('');
-	const [snackbarType, setSnackbarType] = useState('success');
+	const [snackbarType, setSnackbarType] = useState(SNACKBAR_TYPE.success);
 	const handleIconClick = async (paletteId, paletteName) => {
 		const resultAction = await dispatch(addPaletteToLibrary(paletteId));
 		if (addPaletteToLibrary.fulfilled.match(resultAction)) {
 			setSnackbarMsg(
 				`"${paletteName}" palette was added to your library!`
 			);
-			setSnackbarType('success');
+			setSnackbarType(SNACKBAR_TYPE.success);
 		} else {
 			setSnackbarMsg(
 				`Unable to add "${paletteName}" palette to your library, please try again`
 			);
-			setSnackbarType('error');
+			setSnackbarType(SNACKBAR_TYPE.error);
 		}
 
 		toggleSnackbarOpen();

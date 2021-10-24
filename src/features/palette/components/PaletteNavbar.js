@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFormat } from '../slices/paletteSlice';
 import useToggleState from '../../../hooks/useToggleState';
+import { FORMAT, SNACKBAR_TYPE } from '../../../utils/constants';
 import { Link as RouterLink } from 'react-router-dom';
 import LevelSlider from './LevelSlider';
 import Snackbar from '../../../components/snackbar/Snackbar';
@@ -43,9 +44,11 @@ export default function PaletteNavbar({ withSlider }) {
 				{withSlider && <LevelSlider />}
 				<Box sx={{ marginLeft: 'auto', marginRight: '1rem' }}>
 					<Select value={format} onChange={handleChangeFormat}>
-						<MenuItem value='hex'>HEX - #ffffff</MenuItem>
-						<MenuItem value='rgb'>RGB - rgb(255,255,255)</MenuItem>
-						<MenuItem value='rgba'>
+						<MenuItem value={FORMAT.hex}>HEX - #ffffff</MenuItem>
+						<MenuItem value={FORMAT.rgb}>
+							RGB - rgb(255,255,255)
+						</MenuItem>
+						<MenuItem value={FORMAT.rgba}>
 							RGBA - rgba(255,255,255,1.0)
 						</MenuItem>
 					</Select>
@@ -54,7 +57,7 @@ export default function PaletteNavbar({ withSlider }) {
 					message={`Format Change! To ${format.toUpperCase()}`}
 					open={snackbarOpen}
 					toggleOpen={toggleSnackbarOpen}
-					type={'success'}
+					type={SNACKBAR_TYPE.success}
 				/>
 			</Toolbar>
 		</AppBar>

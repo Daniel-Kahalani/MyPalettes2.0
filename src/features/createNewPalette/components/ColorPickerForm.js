@@ -1,0 +1,76 @@
+import React, { useState, useEffect } from 'react';
+import useInputState from '../../../hooks/useInputState';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { ChromePicker } from 'react-color';
+import { Box } from '@mui/system';
+import { AddColorButton } from '../styles/createNewPaletteStyles';
+
+export default function ColorPickerForm({ isPaletteFull, colors }) {
+	const [currentColor, setCurrentColor] = useState('teal');
+	const [newColorName, handleColorNameChange, resetColorName] =
+		useInputState('');
+
+	const handleColorChange = (newColor) => {
+		const { r, g, b, a } = newColor.rgb;
+		setCurrentColor(`rgba(${r},${g},${b},${a})`);
+	};
+
+	const handleColorSubmit = (e) => {
+		// colorsDispatch({
+		// 	type: 'ADD',
+		// 	color: currentColor,
+		// 	name: newColorName,
+		// });
+		resetColorName();
+	};
+
+	useEffect(() => {
+		ValidatorForm.addValidationRule('isColorNameUnique', (value) => {
+			return colors.every(
+				({ name }) => name.toLowerCase() !== value.toLowerCase()
+			);
+		});
+		ValidatorForm.addValidationRule('isColorUnique', (value) => {
+			return colors.every(({ color }) => color !== currentColor);
+		});
+	});
+
+	return (
+		<Box sx={{ width: '100%' }}>
+			<ChromePicker
+				width='100%'
+				color={currentColor}
+				onChange={handleColorChange}
+				disableAlpha={false}
+				style={{ marginTop: '2rem' }}
+			/>
+			<ValidatorForm onSubmit={handleColorSubmit} instantValidate={false}>
+				<TextValidator
+					name='newColorName'
+					placeholder='Color Name'
+					variant='filled'
+					margin='normal'
+					value={newColorName}
+					onChange={handleColorNameChange}
+					validators={[
+						'required',
+						'isColorNameUnique',
+						'isColorUnique',
+					]}
+					fullWidth
+					errorMessages={[
+						'Enter a color name',
+						'Color name must be unique',
+						'Color already used',
+					]}
+				/>
+				<AddColorButton
+					disabled={isPaletteFull}
+					isPaletteFull={isPaletteFull}
+					currentColor={currentColor}>
+					{isPaletteFull ? 'Palette Full' : 'Add Color'}
+				</AddColorButton>
+			</ValidatorForm>
+		</Box>
+	);
+}

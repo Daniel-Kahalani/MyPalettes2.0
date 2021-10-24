@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getFirestore, getDoc, doc } from 'firebase/firestore';
-
+import { FORMAT } from '../../../utils/constants';
 import { generatePaletteWithShades } from '../../../utils/colorHelper';
 
 const initialState = {
-	format: 'hex',
+	format: FORMAT.hex,
 	level: 500,
 	palette: null,
 	shades: null,

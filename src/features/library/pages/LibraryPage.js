@@ -5,6 +5,7 @@ import {
 	getLibraryPalettesList,
 } from '../slices/librarySlice';
 import useToggleState from '../../../hooks/useToggleState';
+import { SNACKBAR_TYPE } from '../../../utils/constants';
 import RemovePaletteDialog from '../components/RemovePaletteDialog';
 import EmptyAnimation from '../components/EmptyAnimation';
 import Navbar from '../../../components/navbar/Navbar';
@@ -25,7 +26,7 @@ export default function LibraryPage() {
 	});
 	const [snackbarOpen, toggleSnackbarOpen] = useToggleState([false, true]);
 	const [snackbarMsg, setSnackbarMsg] = useState('');
-	const [snackbarType, setSnackbarType] = useState('success');
+	const [snackbarType, setSnackbarType] = useState(SNACKBAR_TYPE.success);
 
 	const handleIconClick = async (paletteId, paletteName) => {
 		setPaletteToRemove({ id: paletteId, name: paletteName });
@@ -34,7 +35,7 @@ export default function LibraryPage() {
 
 	const handleRemoveFeedback = (resultAction) => {
 		if (removePaletteToLibrary.fulfilled.match(resultAction)) {
-			setSnackbarType('success');
+			setSnackbarType(SNACKBAR_TYPE.success);
 			setSnackbarMsg(
 				`"${paletteToRemove.name}" palette was remove from your library!`
 			);
