@@ -2,6 +2,8 @@ import { styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
 import { Button } from '@mui/material';
+import { Box } from '@mui/system';
+
 import chroma from 'chroma-js';
 import { DRAWER_WIDTH } from '../../../utils/constants';
 
@@ -22,10 +24,7 @@ export const AppBar = styled(MuiAppBar, {
 	}),
 }));
 
-export const Drawer = styled(MuiDrawer, {
-	variant: 'persistent',
-	anchor: 'left',
-})(({ theme }) => ({
+export const Drawer = styled(MuiDrawer)(({ theme }) => ({
 	width: DRAWER_WIDTH,
 	flexShrink: 0,
 	'& .MuiDrawer-paper': {
@@ -43,20 +42,38 @@ export const DrawerHeader = styled('div')(({ theme }) => ({
 	justifyContent: 'flex-end',
 }));
 
-export const AddColorButton = styled(Button, {
-	variant: 'contained',
-	type: 'submit',
-})(({ theme, isPaletteFull, currentColor }) => ({
-	width: '100%',
-	padding: '1rem',
-	marginTop: '1rem',
-	fontSize: '2rem',
-	backgroundColor: isPaletteFull ? 'gray' : currentColor,
-	color:
-		chroma.contrast(currentColor, 'white') < 4.5
-			? theme.palette.grey[700]
-			: theme.palette.grey[300],
-	':hover ': {
+export const AddColorButton = styled(Button)(
+	({ theme, isPaletteFull, currentColor }) => ({
+		width: '100%',
+		padding: '1rem',
+		marginTop: '1rem',
+		fontSize: '2rem',
 		backgroundColor: isPaletteFull ? 'gray' : currentColor,
-	},
+		color:
+			chroma.contrast(currentColor, 'white') < 4.5
+				? theme.palette.grey[700]
+				: theme.palette.grey[300],
+		':hover ': {
+			backgroundColor: isPaletteFull ? 'gray' : currentColor,
+		},
+	})
+);
+
+export const Main = styled(Box, {
+	shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+	flexGrow: 1,
+	padding: 0,
+	transition: theme.transitions.create('margin', {
+		easing: theme.transitions.easing.sharp,
+		duration: theme.transitions.duration.leavingScreen,
+	}),
+	marginLeft: 0,
+	...(open && {
+		transition: theme.transitions.create('margin', {
+			easing: theme.transitions.easing.easeOut,
+			duration: theme.transitions.duration.enteringScreen,
+		}),
+		marginLeft: `${DRAWER_WIDTH}px`,
+	}),
 }));

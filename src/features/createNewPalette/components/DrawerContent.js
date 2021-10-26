@@ -1,16 +1,23 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearList, addRandomColor } from '../slices/colorsSlice';
 import { MAX_COLORS_IN_PALETTE } from '../../../utils/constants';
-
 import ColorPickerForm from './ColorPickerForm';
 import { Button, Container, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-export default function DrawerContent({ colors, setColors }) {
-	const isPaletteFull = MAX_COLORS_IN_PALETTE === colors.length;
+export default function DrawerContent() {
+	const dispatch = useDispatch();
+	const { list } = useSelector((state) => state.colors);
+	const isPaletteFull = MAX_COLORS_IN_PALETTE === list.length;
 
-	const addRandomColor = (e) => {};
+	const handleRandomColor = (e) => {
+		dispatch(addRandomColor());
+	};
 
-	const clearColors = (e) => {};
+	const clearColors = (e) => {
+		dispatch(clearList());
+	};
 
 	return (
 		<Container
@@ -40,12 +47,12 @@ export default function DrawerContent({ colors, setColors }) {
 					color='primary'
 					fullWidth
 					size='large'
-					onClick={addRandomColor}
+					onClick={handleRandomColor}
 					disabled={isPaletteFull}>
 					Random Color
 				</Button>
 			</Box>
-			<ColorPickerForm isPaletteFull={isPaletteFull} colors={colors} />
+			<ColorPickerForm isPaletteFull={isPaletteFull} />
 		</Container>
 	);
 }

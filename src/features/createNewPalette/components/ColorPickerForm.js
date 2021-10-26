@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addNewColor } from '../slices/colorsSlice';
+import { MAX_COLORS_IN_PALETTE } from '../../../utils/constants';
 import useInputState from '../../../hooks/useInputState';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { ChromePicker } from 'react-color';
 import { Box } from '@mui/system';
 import { AddColorButton } from '../styles/createNewPaletteStyles';
 
-export default function ColorPickerForm({ isPaletteFull, colors }) {
+export default function ColorPickerForm() {
+	const dispatch = useDispatch();
+	const { list } = useSelector((state) => state.colors);
+	const isPaletteFull = MAX_COLORS_IN_PALETTE === list.length;
+
 	const [currentColor, setCurrentColor] = useState('teal');
 	const [newColorName, handleColorNameChange, resetColorName] =
 		useInputState('');
@@ -16,22 +23,18 @@ export default function ColorPickerForm({ isPaletteFull, colors }) {
 	};
 
 	const handleColorSubmit = (e) => {
-		// colorsDispatch({
-		// 	type: 'ADD',
-		// 	color: currentColor,
-		// 	name: newColorName,
-		// });
+		dispatch(addNewColor({ color: currentColor, name: newColorName }));
 		resetColorName();
 	};
 
 	useEffect(() => {
 		ValidatorForm.addValidationRule('isColorNameUnique', (value) => {
-			return colors.every(
+			return list.every(
 				({ name }) => name.toLowerCase() !== value.toLowerCase()
 			);
 		});
 		ValidatorForm.addValidationRule('isColorUnique', (value) => {
-			return colors.every(({ color }) => color !== currentColor);
+			return list.every(({ color }) => color !== currentColor);
 		});
 	});
 
@@ -65,6 +68,8 @@ export default function ColorPickerForm({ isPaletteFull, colors }) {
 					]}
 				/>
 				<AddColorButton
+					variant='contained'
+					type='submit'
 					disabled={isPaletteFull}
 					isPaletteFull={isPaletteFull}
 					currentColor={currentColor}>

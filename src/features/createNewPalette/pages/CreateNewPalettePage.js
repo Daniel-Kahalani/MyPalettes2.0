@@ -1,46 +1,42 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { switchColorsIndex } from '../slices/colorsSlice';
 import useToggleState from '../../../hooks/useToggleState';
 import CreateNewPaletteNavbar from '../components/CreateNewPaletteNavbar';
+import DraggableColorList from '../components/DraggableColorList';
+import DrawerContent from '../components/DrawerContent';
 import { Box, Divider, IconButton } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { Drawer, DrawerHeader } from '../styles/createNewPaletteStyles';
-import DrawerContent from '../components/DrawerContent';
-// import DraggableColorList from './DraggableColorList';
-export default function CreateNewPalettePage() {
-	const [open, toggleOpen] = useToggleState([true, false]);
-	const [colors, setColors] = useState([]);
+import { Drawer, DrawerHeader, Main } from '../styles/createNewPaletteStyles';
 
-	const onSortEnd = ({ oldIndex, newIndex }) => {
-		// colorsDispatch({
-		// 	type: 'MOVE',
-		// 	oldIndex: oldIndex,
-		// 	newIndex: newIndex,
-		// });
+export default function CreateNewPalettePage() {
+	const dispatch = useDispatch();
+	const { list } = useSelector((state) => state.colors);
+	const [open, toggleOpen] = useToggleState([true, false]);
+
+	const onSortEnd = (oldIndex, newIndex) => {
+		dispatch(switchColorsIndex({ oldIndex, newIndex, colors: list }));
 	};
 
 	return (
-		<Box sx={{ dispaly: 'flex' }}>
+		<Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 			<CreateNewPaletteNavbar open={open} toggleOpen={toggleOpen} />
-			<Drawer open={open}>
+			<Drawer variant='persistent' anchor='left' open={open}>
 				<DrawerHeader>
 					<IconButton onClick={toggleOpen}>
 						<ChevronLeftIcon />
 					</IconButton>
 				</DrawerHeader>
 				<Divider />
-				<DrawerContent colors={colors} setColors={setColors} />
+				<DrawerContent />
 			</Drawer>
-			{/* <main
-				className={clsx(classes.content, {
-					[classes.contentShift]: open,
-				})}>
-				<div className={classes.drawerHeader} />
+			<Main open={open}>
 				<DraggableColorList
 					axis='xy'
 					onSortEnd={onSortEnd}
 					distance={20}
 				/>
-			</main>  */}
+			</Main>
 		</Box>
 	);
 }
