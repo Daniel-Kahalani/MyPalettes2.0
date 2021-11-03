@@ -7,6 +7,15 @@ import LibraryPage from '../../features/library/pages/LibraryPage';
 import PalettePage from '../../features/palette/pages/PalettePage';
 import ColorShadesPage from '../../features/palette/pages/ColorShadesPage';
 import CreateNewPalettePage from '../../features/createNewPalette/pages/CreateNewPalettePage';
+import { Box, Fade } from '@mui/material';
+
+const routes = [
+	{ path: '/', Component: PaletteListPage },
+	{ path: '/library', Component: LibraryPage },
+	{ path: '/palettes/new', Component: CreateNewPalettePage },
+	{ path: '/palettes/:id', Component: PalettePage },
+	{ path: '/palettes/:paletteId/:colorId', Component: ColorShadesPage },
+];
 
 export default function Navigation() {
 	const location = useLocation();
@@ -16,18 +25,17 @@ export default function Navigation() {
 		<>
 			{isAuthenticated !== null ? (
 				<Switch location={location}>
-					<Route exact path='/' component={PaletteListPage} />
-					<Route exact path='/library' component={LibraryPage} />
-					<Route
-						path='/palettes/new'
-						component={CreateNewPalettePage}
-					/>
-					<Route exact path='/palettes/:id' component={PalettePage} />
-					<Route
-						exact
-						path='/palettes/:paletteId/:colorId'
-						component={ColorShadesPage}
-					/>
+					{routes.map(({ path, Component }) => (
+						<Route key={path} exact path={path}>
+							{({ match }) => (
+								<Fade in={true} timeout={700}>
+									<Box>
+										<Component />
+									</Box>
+								</Fade>
+							)}
+						</Route>
+					))}
 					<Route path='*'>
 						<Redirect to='/' />
 					</Route>
