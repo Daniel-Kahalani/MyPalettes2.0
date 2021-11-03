@@ -24,7 +24,7 @@ const initialState = {
 
 export const register = createAsyncThunk(
 	'user/register',
-	async ({ email, password }, { rejectWithValue }) => {
+	async ({ email, password, fullName }, { rejectWithValue }) => {
 		try {
 			const auth = getAuth();
 			const userCredential = await createUserWithEmailAndPassword(
@@ -36,8 +36,7 @@ export const register = createAsyncThunk(
 			const userData = {
 				uid: userCredential.user.uid,
 				email: userCredential.user.email,
-				firstName: '',
-				lastName: '',
+				fullName,
 			};
 			const newUserDoc = await addDoc(collection(db, 'users'), {
 				...userData,
@@ -70,18 +69,7 @@ export const login = createAsyncThunk(
 				email,
 				password
 			);
-			const db = getFirestore();
-			const userDoc = (
-				await getDocs(
-					query(
-						collection(db, 'users'),
-						where('uid', '==', userCredential.user.uid),
-						limit(1)
-					)
-				)
-			).docs[0];
-			const { library, ...userData } = userDoc.data();
-			return { id: userDoc.id, ...userData };
+			return await createUserData(userCredential.user.uid);
 		} catch (e) {
 			if (
 				e.code === 'auth/user-not-found' ||
@@ -101,16 +89,31 @@ export const login = createAsyncThunk(
 	}
 );
 
-export const isLoggedIn = createAsyncThunk('user/isLoggedIn', async () => {
-	const auth = getAuth();
-	const user = auth.currentUser;
-	return !user
-		? null
-		: {
-				uid: user.uid,
-				email: user.email,
-		  };
-});
+async function createUserData(userUid) {
+	const db = getFirestore();
+	const userDoc = (
+		await getDocs(
+			query(
+				collection(db, 'users'),
+				where('uid', '==', userUid),
+				limit(1)
+			)
+		)
+	).docs[0];
+	const { library, ...userData } = userDoc.data();
+	return { id: userDoc.id, ...userData };
+}
+
+export const getUserData = createAsyncThunk(
+	'user/getUserData',
+	async ({ userUid }, { rejectWithValue }) => {
+		try {
+			return await createUserData(userUid);
+		} catch (e) {
+			throw rejectWithValue(e);
+		}
+	}
+);
 
 export const logout = createAsyncThunk(
 	'user/logout',
@@ -128,6 +131,9 @@ const userSlice = createSlice({
 	name: 'user',
 	initialState,
 	reducers: {
+		setIsAuthenticated(state, action) {
+			state.isAuthenticated = action.payload;
+		},
 		clearError(state, action) {
 			state.error = null;
 		},
@@ -167,13 +173,17 @@ const userSlice = createSlice({
 			};
 			state.isAuthenticated = false;
 		},
-		[isLoggedIn.fulfilled]: (state, action) => {
-			if (action.payload) {
-				state.info = action.payload;
-				state.isAuthenticated = true;
-			} else {
-				state.isAuthenticated = false;
-			}
+		[getUserData.pending]: (state, action) => {
+			state.loading = true;
+		},
+		[getUserData.fulfilled]: (state, action) => {
+			state.info = action.payload;
+			state.isAuthenticated = true;
+			state.loading = false;
+		},
+		[getUserData.rejected]: (state, action) => {
+			state.isAuthenticated = false;
+			state.loading = false;
 		},
 		[logout.fulfilled]: (state, action) => {
 			state.info = initialState.info;
@@ -191,6 +201,6 @@ const userSlice = createSlice({
 	},
 });
 
-export const { clearError } = userSlice.actions;
+export const { clearError, setIsAuthenticated } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {
 	removePaletteToLibrary,
 	getLibraryPalettesList,
@@ -16,7 +17,9 @@ import { Fade, Grid } from '@mui/material';
 import { LibraryContainer, PalettesContainer } from '../styles/libraryStyles';
 
 export default function LibraryPage() {
+	const history = useHistory();
 	const dispatch = useDispatch();
+	const { isAuthenticated } = useSelector((state) => state.user);
 	const { loading, error, list } = useSelector((state) => state.library);
 	const [removePaletteDialogOpen, toggleRemovePaletteDialogOpen] =
 		useToggleState([false, true]);
@@ -49,55 +52,66 @@ export default function LibraryPage() {
 	};
 
 	useEffect(() => {
-		dispatch(getLibraryPalettesList());
-	}, [dispatch]);
+		if (isAuthenticated) dispatch(getLibraryPalettesList());
+		else history.replace('/');
+	}, [dispatch, history, isAuthenticated]);
 
 	return (
 		<LibraryContainer>
 			<Navbar />
-			<PalettesContainer
-				sx={{ width: { xs: '50%', sm: '40%', md: '50%' } }}>
-				{!loading &&
-					(error ? (
-						<ErrorAnimation />
-					) : list.length > 0 ? (
-						<Fade in={true} timeout={1500}>
-							<Grid
-								container
-								spacing={5}
-								justifyContent='flex-start'>
-								{list.map((palette) => (
+			{isAuthenticated && (
+				<>
+					<PalettesContainer
+						sx={{ width: { xs: '50%', sm: '40%', md: '50%' } }}>
+						{!loading &&
+							list !== null &&
+							(error ? (
+								<ErrorAnimation />
+							) : list.length > 0 ? (
+								<Fade in={true} timeout={1500}>
 									<Grid
-										item
-										xs={12}
-										md={6}
-										lg={4}
-										key={palette.id}>
-										<MiniPalette
-											palette={palette}
-											handleIconClick={handleIconClick}
-											isDeleteable={true}
-										/>
+										container
+										spacing={5}
+										justifyContent='flex-start'>
+										{list.map((palette) => (
+											<Grid
+												item
+												xs={12}
+												md={6}
+												lg={4}
+												key={palette.id}>
+												<MiniPalette
+													palette={palette}
+													handleIconClick={
+														handleIconClick
+													}
+													isDeleteable={true}
+												/>
+											</Grid>
+										))}
 									</Grid>
-								))}
-							</Grid>
-						</Fade>
-					) : (
-						<EmptyAnimation />
-					))}
-			</PalettesContainer>
-			<Snackbar
-				message={snackbarMsg}
-				open={snackbarOpen}
-				toggleOpen={toggleSnackbarOpen}
-				type={snackbarType}
-			/>
-			<RemovePaletteDialog
-				open={removePaletteDialogOpen}
-				toggleOpen={toggleRemovePaletteDialogOpen}
-				paletteId={paletteToRemove.id}
-				handleRemoveFeedback={handleRemoveFeedback}
-			/>
+								</Fade>
+							) : (
+								<>
+									{console.log('empy library')}
+									<EmptyAnimation />
+								</>
+							))}
+					</PalettesContainer>
+					<Snackbar
+						message={snackbarMsg}
+						open={snackbarOpen}
+						toggleOpen={toggleSnackbarOpen}
+						type={snackbarType}
+					/>
+					<RemovePaletteDialog
+						open={removePaletteDialogOpen}
+						toggleOpen={toggleRemovePaletteDialogOpen}
+						paletteId={paletteToRemove.id}
+						handleRemoveFeedback={handleRemoveFeedback}
+					/>
+				</>
+			)}
 		</LibraryContainer>
 	);
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import PaletteListPage from '../../features/paletteList/pages/PaletteListPage';
 import LibraryPage from '../../features/library/pages/LibraryPage';
@@ -9,21 +10,29 @@ import CreateNewPalettePage from '../../features/createNewPalette/pages/CreateNe
 
 export default function Navigation() {
 	const location = useLocation();
+	const { isAuthenticated } = useSelector((state) => state.user);
 
 	return (
-		<Switch location={location}>
-			<Route exact path='/' component={PaletteListPage} />
-			<Route exact path='/library' component={LibraryPage} />
-			<Route path='/palettes/new' component={CreateNewPalettePage} />
-			<Route exact path='/palettes/:id' component={PalettePage} />
-			<Route
-				exact
-				path='/palettes/:paletteId/:colorId'
-				component={ColorShadesPage}
-			/>
-			<Route path='*'>
-				<Redirect to='/' />
-			</Route>
-		</Switch>
+		<>
+			{isAuthenticated !== null ? (
+				<Switch location={location}>
+					<Route exact path='/' component={PaletteListPage} />
+					<Route exact path='/library' component={LibraryPage} />
+					<Route
+						path='/palettes/new'
+						component={CreateNewPalettePage}
+					/>
+					<Route exact path='/palettes/:id' component={PalettePage} />
+					<Route
+						exact
+						path='/palettes/:paletteId/:colorId'
+						component={ColorShadesPage}
+					/>
+					<Route path='*'>
+						<Redirect to='/' />
+					</Route>
+				</Switch>
+			) : null}
+		</>
 	);
 }

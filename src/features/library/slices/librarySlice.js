@@ -13,7 +13,7 @@ import {
 } from 'firebase/firestore';
 
 const initialState = {
-	list: [],
+	list: null,
 	error: null,
 	loading: null,
 	success: null,
@@ -100,20 +100,20 @@ const librarySlice = createSlice({
 	},
 	extraReducers: {
 		[getLibraryPalettesList.pending]: (state, action) => {
-			state.error = null;
 			state.loading = true;
+			state.error = null;
 			state.list = [];
 		},
 		[getLibraryPalettesList.fulfilled]: (state, action) => {
-			state.loading = false;
 			state.list = action.payload;
+			state.loading = false;
 		},
 		[getLibraryPalettesList.rejected]: (state, action) => {
-			state.loading = false;
 			state.error = {
 				message: action.payload.message,
 				code: action.payload.code,
 			};
+			state.loading = false;
 		},
 		[addPaletteToLibrary.pending]: (state, action) => {
 			state.error = null;

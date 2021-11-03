@@ -132,7 +132,8 @@ export default function LoginDialog({ toogleDialog, switchToLogin, redirect }) {
 								variant='contained'
 								color='primary'
 								type='submit'
-								fullWidth={true}>
+								fullWidth
+								size='large'>
 								SIGN IN
 							</Button>
 						</>

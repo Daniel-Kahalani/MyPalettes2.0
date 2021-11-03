@@ -15,9 +15,11 @@ import {
 	CircularProgress,
 	InputAdornment,
 } from '@mui/material';
-
 import LockIcon from '@mui/icons-material/Lock';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
+const inputStyle = { WebkitBoxShadow: '0 0 0 1000px white inset' };
 
 export default function RegisterDialog({
 	toogleDialog,
@@ -27,15 +29,15 @@ export default function RegisterDialog({
 	const { error, loading } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
 	const history = useHistory();
-	// const [username, handleUsernameChange, resetUsername] = useInputState('');
+
 	const [email, handleEmailChange, resetEmail] = useInputState('');
 	const [password, handlePasswordChange, resetPassword] = useInputState('');
-	const inputStyle = { WebkitBoxShadow: '0 0 0 1000px white inset' };
+	const [fullName, handleFullNameChange, resetFullName] = useInputState('');
 
 	const resetInputs = () => {
-		// resetUsername();
 		resetPassword();
 		resetEmail();
+		resetFullName();
 	};
 
 	const handleClose = () => {
@@ -44,7 +46,9 @@ export default function RegisterDialog({
 	};
 
 	const handleSubmit = async () => {
-		const resultAction = await dispatch(register({ email, password }));
+		const resultAction = await dispatch(
+			register({ email, password, fullName })
+		);
 		if (register.fulfilled.match(resultAction)) {
 			resetInputs();
 			toogleDialog();
@@ -72,6 +76,24 @@ export default function RegisterDialog({
 					<Typography variant='body1' sx={{ marginBottom: '1rem' }}>
 						Sign up to find new palettes.
 					</Typography>
+					<TextValidator
+						name='fullName'
+						label='Full Name'
+						onChange={handleFullNameChange}
+						value={fullName}
+						fullWidth
+						margin='normal'
+						validators={['required']}
+						errorMessages={['Enter full name']}
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position='start'>
+									<AccountCircleIcon />
+								</InputAdornment>
+							),
+						}}
+					/>
+
 					<TextValidator
 						autoComplete='username'
 						name='email'
@@ -140,7 +162,8 @@ export default function RegisterDialog({
 								variant='contained'
 								color='primary'
 								type='submit'
-								fullWidth={true}>
+								fullWidth
+								size='large'>
 								SIGN UP
 							</Button>
 						</>
