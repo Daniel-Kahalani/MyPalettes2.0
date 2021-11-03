@@ -36,6 +36,16 @@ export default function Navbar() {
 		history.push('/');
 	};
 
+	const handleSignIn = async () => {
+		serRedirect(null);
+		toggleLoginDialog();
+	};
+
+	const handleSignUp = async () => {
+		serRedirect(null);
+		toggleRegisterDialog();
+	};
+
 	const switchDialog = () => {
 		toggleLoginDialog();
 		toggleRegisterDialog();
@@ -88,32 +98,31 @@ export default function Navbar() {
 						<>
 							<Button
 								sx={{ color: 'common.white' }}
-								onClick={toggleRegisterDialog}>
+								onClick={handleSignUp}>
 								SIGN UP
 							</Button>
 							<Button
 								sx={{ color: 'common.white' }}
-								onClick={toggleLoginDialog}>
+								onClick={handleSignIn}>
 								SIGN IN
 							</Button>
 						</>
 					)}
 				</Toolbar>
 			</AppBar>
-			{registerDialog && (
-				<RegisterDialog
-					toogleDialog={toggleRegisterDialog}
-					switchToLogin={switchDialog}
-					redirect={redirect}
-				/>
-			)}
-			{loginDialog && (
-				<LoginDialog
-					toogleDialog={toggleLoginDialog}
-					switchToLogin={switchDialog}
-					redirect={redirect}
-				/>
-			)}
+
+			<RegisterDialog
+				openDialog={registerDialog}
+				toogleDialog={toggleRegisterDialog}
+				switchToLogin={switchDialog}
+				redirect={redirect}
+			/>
+			<LoginDialog
+				openDialog={loginDialog}
+				toogleDialog={toggleLoginDialog}
+				switchToRegister={switchDialog}
+				redirect={redirect}
+			/>
 		</Box>
 	);
 }

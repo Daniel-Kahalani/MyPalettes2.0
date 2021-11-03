@@ -22,6 +22,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const inputStyle = { WebkitBoxShadow: '0 0 0 1000px white inset' };
 
 export default function RegisterDialog({
+	openDialog,
 	toogleDialog,
 	switchToLogin,
 	redirect,
@@ -29,7 +30,6 @@ export default function RegisterDialog({
 	const { error, loading } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
 	const history = useHistory();
-
 	const [email, handleEmailChange, resetEmail] = useInputState('');
 	const [password, handlePasswordChange, resetPassword] = useInputState('');
 	const [fullName, handleFullNameChange, resetFullName] = useInputState('');
@@ -65,7 +65,7 @@ export default function RegisterDialog({
 
 	return (
 		<Dialog
-			open={true}
+			open={openDialog}
 			onClose={handleClose}
 			fullWidth={true}
 			maxWidth={'xs'}

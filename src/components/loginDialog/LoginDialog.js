@@ -19,7 +19,12 @@ import {
 import LockIcon from '@mui/icons-material/Lock';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
-export default function LoginDialog({ toogleDialog, switchToLogin, redirect }) {
+export default function LoginDialog({
+	openDialog,
+	toogleDialog,
+	switchToRegister,
+	redirect,
+}) {
 	const { error, loading } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
 	const history = useHistory();
@@ -50,12 +55,12 @@ export default function LoginDialog({ toogleDialog, switchToLogin, redirect }) {
 
 	const handleSwitchDialog = () => {
 		resetInputs();
-		switchToLogin();
+		switchToRegister();
 	};
 
 	return (
 		<Dialog
-			open={true}
+			open={openDialog}
 			onClose={handleClose}
 			fullWidth={true}
 			maxWidth={'xs'}
@@ -67,6 +72,7 @@ export default function LoginDialog({ toogleDialog, switchToLogin, redirect }) {
 						Sign in to find new palettes.
 					</Typography>
 					<TextValidator
+						autoComplete='username'
 						name='email'
 						label='Email'
 						onChange={handleEmailChange}
@@ -85,6 +91,7 @@ export default function LoginDialog({ toogleDialog, switchToLogin, redirect }) {
 						}}
 					/>
 					<TextValidator
+						autoComplete='current-password'
 						name='password'
 						label='Password'
 						type='password'
