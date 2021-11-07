@@ -65,10 +65,16 @@ const paletteSlice = createSlice({
 		setLevel(state, action) {
 			state.level = action.payload;
 		},
+		clearPalette(state, action) {
+			state.palette = initialState.palette;
+		},
 		resetPalette(state, action) {
 			state.format = initialState.format;
 			state.level = initialState.level;
 			state.palette = initialState.palette;
+			state.shades = initialState.shades;
+			state.loading = initialState.loading;
+			state.error = initialState.error;
 		},
 	},
 	extraReducers: {
@@ -99,6 +105,7 @@ const paletteSlice = createSlice({
 	},
 });
 
-export const { setFormat, setLevel, resetPalette } = paletteSlice.actions;
+export const { setFormat, setLevel, clearPalette, resetPalette } =
+	paletteSlice.actions;
 
 export default paletteSlice.reducer;

@@ -17,7 +17,7 @@ export default function CreateNewPalettePage() {
 	const { isAuthenticated } = useSelector((state) => state.user);
 	const [open, toggleOpen] = useToggleState([true, false]);
 
-	const onSortEnd = (oldIndex, newIndex) => {
+	const onSortEnd = ({ oldIndex, newIndex }) => {
 		dispatch(switchColorsIndex({ oldIndex, newIndex, colors: list }));
 	};
 

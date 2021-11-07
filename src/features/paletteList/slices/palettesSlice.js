@@ -29,7 +29,7 @@ const palettesSlice = createSlice({
 		clearError(state, action) {
 			state.error = null;
 		},
-		clearPalettes(state, action) {
+		resetPalettes(state, action) {
 			state.list = initialState.list;
 			state.error = initialState.error;
 			state.loading = initialState.loading;
@@ -55,6 +55,6 @@ const palettesSlice = createSlice({
 	},
 });
 
-export const { clearError, clearPalettes } = palettesSlice.actions;
+export const { clearError, resetPalettes } = palettesSlice.actions;
 
 export default palettesSlice.reducer;

@@ -21,12 +21,12 @@ export default function ColorShadesPage() {
 				if (getPalette.fulfilled.match(resultAction)) {
 					dispatch(getColorShades(colorId));
 				}
-			} else if (!shades) {
+			} else {
 				dispatch(getColorShades(colorId));
 			}
 		};
 		fetchData();
-	}, [dispatch, colorId, paletteId, palette, shades]);
+	}, [dispatch, colorId, paletteId, palette]);
 
 	return (
 		<Box

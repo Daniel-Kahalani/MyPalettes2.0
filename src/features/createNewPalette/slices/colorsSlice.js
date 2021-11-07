@@ -3,12 +3,9 @@ import {
 	getFirestore,
 	getDocs,
 	addDoc,
-	updateDoc,
-	doc,
 	query,
 	collection,
 	where,
-	arrayUnion,
 	limit,
 } from 'firebase/firestore';
 import { arrayMoveImmutable } from 'array-move';
@@ -67,7 +64,7 @@ const colorsSlice = createSlice({
 	initialState,
 	reducers: {
 		switchColorsIndex(state, action) {
-			state.colors = arrayMoveImmutable(
+			state.list = arrayMoveImmutable(
 				action.payload.colors,
 				action.payload.oldIndex,
 				action.payload.newIndex

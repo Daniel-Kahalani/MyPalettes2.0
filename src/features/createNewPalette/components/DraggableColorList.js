@@ -18,29 +18,12 @@ const DraggableColorList = SortableContainer(() => {
 				alignContent: 'start',
 			}}>
 			{list.map((color, index) => (
-				<Grid
-					item
-					sx={{
-						width: {
-							xs: '100%',
-							sm: '50%',
-							md: '25%',
-							lg: '20%',
-						},
-						height: {
-							xs: '5%',
-							sm: '10%',
-							md: '20%',
-							lg: '25%',
-						},
-					}}
-					key={color.name}>
-					<DraggableColorBox
-						index={index}
-						color={color.color}
-						name={color.name}
-					/>
-				</Grid>
+				<DraggableColorBox
+					key={color.name}
+					index={index}
+					color={color.color}
+					name={color.name}
+				/>
 			))}
 		</Grid>
 	);

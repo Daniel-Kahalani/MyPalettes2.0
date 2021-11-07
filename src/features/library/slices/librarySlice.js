@@ -91,7 +91,7 @@ const librarySlice = createSlice({
 		clearError(state, action) {
 			state.error = null;
 		},
-		clearLibrary(state, action) {
+		resetLibrary(state, action) {
 			state.list = initialState.list;
 			state.error = initialState.error;
 			state.loading = initialState.loading;
@@ -153,6 +153,6 @@ const librarySlice = createSlice({
 	},
 });
 
-export const { clearError, clearLibrary } = librarySlice.actions;
+export const { clearError, resetLibrary } = librarySlice.actions;
 
 export default librarySlice.reducer;

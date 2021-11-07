@@ -26,10 +26,16 @@ export const AppBar = styled(MuiAppBar, {
 
 export const Drawer = styled(MuiDrawer)(({ theme }) => ({
 	width: DRAWER_WIDTH,
+	[theme.breakpoints.down('md')]: {
+		width: '100%',
+	},
 	flexShrink: 0,
 	'& .MuiDrawer-paper': {
 		width: DRAWER_WIDTH,
 		boxSizing: 'border-box',
+		[theme.breakpoints.down('md')]: {
+			width: '100%',
+		},
 	},
 }));
 

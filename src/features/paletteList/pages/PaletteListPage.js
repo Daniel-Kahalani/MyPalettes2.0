@@ -4,7 +4,7 @@ import { getPalettesList } from '../slices/palettesSlice';
 import { addPaletteToLibrary } from '../../library/slices/librarySlice';
 import useToggleState from '../../../hooks/useToggleState';
 import { SNACKBAR_TYPE } from '../../../utils/constants';
-import Navbar from '../../../components/navbar/Navbar';
+import Navbar from '../../navbar';
 import ErrorAnimation from '../../../components/errorAnimation/ErrorAnimation';
 import MiniPalette from '../../../components/miniPalette/MiniPalette';
 import Snackbar from '../../../components/snackbar/Snackbar';

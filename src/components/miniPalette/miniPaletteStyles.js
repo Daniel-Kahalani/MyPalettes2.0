@@ -1,9 +1,9 @@
 import { styled } from '@mui/system';
-import { Typography } from '@mui/material';
+import { Typography, Box, Paper } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import Star from '@mui/icons-material/Star';
 
-export const MiniPaletteContainer = styled('div')({
+export const MiniPaletteContainer = styled(Paper)({
 	backgroundColor: 'white',
 	border: '1px solid black',
 	borderRadius: '5px',

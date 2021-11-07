@@ -12,7 +12,7 @@ export default function CreateNewPaletteNavbar({ toggleOpen, open }) {
 	const [openDialog, toggleOpenDialog] = useToggleState([false, true]);
 
 	const handleBackClick = () => {
-		history.goBack();
+		history.push('/');
 	};
 
 	const handleSaveClick = () => {

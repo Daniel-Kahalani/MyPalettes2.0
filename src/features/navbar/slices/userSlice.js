@@ -187,7 +187,6 @@ const userSlice = createSlice({
 		},
 		[logout.fulfilled]: (state, action) => {
 			state.info = initialState.info;
-			state.photo = initialState.photo;
 			state.isAuthenticated = false;
 			state.error = initialState.error;
 			state.loading = initialState.loading;

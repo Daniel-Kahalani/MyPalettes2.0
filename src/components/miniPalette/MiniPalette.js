@@ -29,7 +29,7 @@ export default function MiniPalette({
 	};
 
 	return (
-		<MiniPaletteContainer onClick={goToPalette}>
+		<MiniPaletteContainer onClick={goToPalette} elevation={12}>
 			{isDeleteable ? (
 				<DeleteIcon onClick={onIconClick} />
 			) : (

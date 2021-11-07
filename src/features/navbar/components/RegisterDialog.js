@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { register } from '../../features/paletteList/slices/userSlice';
-import useInputState from '../../hooks/useInputState';
+import { register, clearError } from '../slices/userSlice';
+import useInputState from '../../../hooks/useInputState';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import {
 	Link,
@@ -42,6 +42,7 @@ export default function RegisterDialog({
 
 	const handleClose = () => {
 		resetInputs();
+		dispatch(clearError());
 		toogleDialog();
 	};
 
@@ -60,6 +61,7 @@ export default function RegisterDialog({
 
 	const handleSwitchDialog = () => {
 		resetInputs();
+		dispatch(clearError());
 		switchToLogin();
 	};
 

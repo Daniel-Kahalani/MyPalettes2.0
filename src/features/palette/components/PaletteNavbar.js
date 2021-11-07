@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setFormat } from '../slices/paletteSlice';
+import { setFormat, clearPalette } from '../slices/paletteSlice';
 import useToggleState from '../../../hooks/useToggleState';
 import { FORMAT, SNACKBAR_TYPE } from '../../../utils/constants';
 import { Link as RouterLink } from 'react-router-dom';
@@ -33,6 +33,7 @@ export default function PaletteNavbar({ withSlider }) {
 					backgroundColor: '#eceff1',
 				}}>
 				<Link
+					onClick={() => dispatch(clearPalette())}
 					component={RouterLink}
 					to='/'
 					variant='h5'

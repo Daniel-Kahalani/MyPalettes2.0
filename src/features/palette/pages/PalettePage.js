@@ -31,7 +31,7 @@ export default function PalettePage() {
 					flexGrow: '1',
 				}}>
 				{palette && (
-					<Grid container>
+					<Grid container sx={{ alignContent: 'start' }}>
 						{palette.colors[level].map((color) => (
 							<Grid
 								item
@@ -41,6 +41,12 @@ export default function PalettePage() {
 										sm: '50%',
 										md: '25%',
 										lg: '20%',
+									},
+									height: {
+										xs: 'auto',
+										sm: '10%',
+										md: '20%',
+										lg: '25%',
 									},
 								}}
 								key={color.id}>

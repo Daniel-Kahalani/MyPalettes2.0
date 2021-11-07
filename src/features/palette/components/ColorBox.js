@@ -8,13 +8,7 @@ import { Box } from '@mui/system';
 import { Button, Link, Typography } from '@mui/material';
 import chroma from 'chroma-js';
 
-export default function ColorBox({
-	id,
-	name,
-	background,
-	withMoreButton,
-	moreURL,
-}) {
+export default function ColorBox({ id, name, background, withMoreButton }) {
 	const { palette } = useSelector((state) => state.palette);
 	const [copied, toogleCopied, reset] = useToggleState([false, true]);
 	const textColor =
@@ -49,9 +43,9 @@ export default function ColorBox({
 						position: 'absolute',
 						left: 0,
 						alignSelf: 'flex-end',
-						padding: '0.5rem',
+						padding: '0.2rem',
 					}}
-					vareint='body2'
+					variant='overline'
 					color={textColor}>
 					{name}
 				</Typography>
@@ -68,11 +62,17 @@ export default function ColorBox({
 				{withMoreButton && (
 					<Link
 						sx={{
-							alignSelf: 'flex-end',
 							position: 'absolute',
 							right: 0,
 							backgroundColor: 'rgba(255, 255, 255, 0.3)',
-							padding: '0.5rem',
+							alignSelf: {
+								xs: 'center',
+								sm: 'flex-end',
+							},
+							padding: {
+								xs: '0.3rem',
+								sm: '0.5rem',
+							},
 						}}
 						onClick={(e) => e.stopPropagation()}
 						component={RouterLink}
