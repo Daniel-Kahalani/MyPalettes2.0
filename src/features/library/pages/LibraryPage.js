@@ -55,7 +55,6 @@ export default function LibraryPage() {
 		if (isAuthenticated) dispatch(getLibraryPalettesList());
 		else history.replace('/');
 	}, [dispatch, history, isAuthenticated]);
-
 	return (
 		<LibraryContainer>
 			<Navbar />

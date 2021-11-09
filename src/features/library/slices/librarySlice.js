@@ -31,6 +31,7 @@ export const getLibraryPalettesList = createAsyncThunk(
 			const { library } = (
 				await getDoc(doc(db, 'users', info.id))
 			).data();
+			if (library.length === 0) return [];
 			const palettesSnapshot = await getDocs(
 				query(
 					collection(db, 'palettes'),

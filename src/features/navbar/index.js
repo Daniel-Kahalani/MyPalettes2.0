@@ -6,22 +6,19 @@ import { resetLibrary } from '../../features/library/slices/librarySlice';
 import { resetPalette } from '../../features/palette/slices/paletteSlice';
 import { useHistory, Link as RouterLink } from 'react-router-dom';
 import useToggleState from '../../hooks/useToggleState';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
+import MobileMenu from './components/MobileMenu';
+import Menu from './components/Menu';
 import RegisterDialog from './components/RegisterDialog';
 import LoginDialog from './components/LoginDialog';
+import { AppBar, Toolbar, Typography, Link, IconButton } from '@mui/material';
 import { Box } from '@mui/system';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import IconButton from '@mui/material/IconButton';
-import MobileMenu from './components/MobileMenu';
+
 export default function Navbar() {
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const { isAuthenticated } = useSelector((state) => state.user);
-	const [redirect, serRedirect] = useState(null);
+	const [redirect, setRedirect] = useState(null);
 	const [loginDialog, toggleLoginDialog] = useToggleState([false, true]);
 	const [registerDialog, toggleRegisterDialog] = useToggleState([
 		false,
@@ -32,27 +29,27 @@ export default function Navbar() {
 
 	const handleUserFeature = (e, redirectToPage) => {
 		if (!isAuthenticated) {
-			serRedirect(redirectToPage);
+			setRedirect(redirectToPage);
 			toggleLoginDialog();
 			e.preventDefault();
 		}
 	};
 
 	const handleSignOut = async () => {
+		await dispatch(logout());
+		history.push('/');
 		dispatch(resetColors());
 		dispatch(resetLibrary());
 		dispatch(resetPalette());
-		await dispatch(logout());
-		history.push('/');
 	};
 
 	const handleSignIn = async () => {
-		serRedirect(null);
+		setRedirect(null);
 		toggleLoginDialog();
 	};
 
 	const handleSignUp = async () => {
-		serRedirect(null);
+		setRedirect(null);
 		toggleRegisterDialog();
 	};
 
@@ -83,58 +80,19 @@ export default function Navbar() {
 						</Link>
 					</Typography>
 					<Box sx={{ flexGrow: 1 }} />
-					<Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-						<Link
-							to='palettes/new'
-							component={RouterLink}
-							underline='none'
-							color='common.white'
-							onClick={(e) =>
-								handleUserFeature(e, 'palettes/new')
-							}>
-							<Button sx={{ color: 'common.white' }}>
-								Create Palette
-							</Button>
-						</Link>
-
-						<Link
-							to='library'
-							component={RouterLink}
-							underline='none'
-							color='primary'
-							onClick={(e) => handleUserFeature(e, 'library')}>
-							<Button sx={{ color: 'common.white' }}>
-								Library
-							</Button>
-						</Link>
-						{isAuthenticated ? (
-							<Button
-								sx={{ color: 'common.white' }}
-								onClick={handleSignOut}>
-								Logout
-							</Button>
-						) : (
-							<>
-								<Button
-									sx={{ color: 'common.white' }}
-									onClick={handleSignUp}>
-									SIGN UP
-								</Button>
-								<Button
-									sx={{ color: 'common.white' }}
-									onClick={handleSignIn}>
-									SIGN IN
-								</Button>
-							</>
-						)}
-					</Box>
+					<Menu
+						handleUserFeature={handleUserFeature}
+						handleSignUp={handleSignUp}
+						handleSignIn={handleSignIn}
+						handleSignOut={handleSignOut}
+					/>
 					<Box sx={{ display: { xs: 'flex', md: 'none' } }}>
 						<IconButton
 							size='large'
 							aria-label='show more'
 							aria-haspopup='true'
 							onClick={handleMobileMenuOpen}
-							color='inherit'>
+							sx={{ color: 'common.white' }}>
 							<MoreIcon />
 						</IconButton>
 					</Box>
@@ -144,6 +102,10 @@ export default function Navbar() {
 				open={mobileMenu}
 				toggleOpen={toggleMobileMenu}
 				anchorEl={mobileAnchorEl}
+				handleUserFeature={handleUserFeature}
+				handleSignUp={handleSignUp}
+				handleSignIn={handleSignIn}
+				handleSignOut={handleSignOut}
 			/>
 			<RegisterDialog
 				openDialog={registerDialog}

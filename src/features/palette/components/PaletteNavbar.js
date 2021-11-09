@@ -43,7 +43,10 @@ export default function PaletteNavbar({ withSlider }) {
 					colors
 				</Link>
 				{withSlider && <LevelSlider />}
-				<Box sx={{ marginLeft: 'auto', marginRight: '1rem' }}>
+				<Box
+					sx={{
+						margin: '0.2rem 0.5rem 0.2rem auto',
+					}}>
 					<Select value={format} onChange={handleChangeFormat}>
 						<MenuItem value={FORMAT.hex}>HEX - #ffffff</MenuItem>
 						<MenuItem value={FORMAT.rgb}>

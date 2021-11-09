@@ -28,8 +28,10 @@ export default function LoginDialog({
 	const { error, loading } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
 	const history = useHistory();
-	const [email, handleEmailChange, resetEmail] = useInputState('');
-	const [password, handlePasswordChange, resetPassword] = useInputState('');
+	const [email, handleEmailChange, resetEmail] =
+		useInputState('john@example.com');
+	const [password, handlePasswordChange, resetPassword] =
+		useInputState('john147');
 	const inputStyle = { WebkitBoxShadow: '0 0 0 1000px white inset' };
 
 	const resetInputs = () => {
