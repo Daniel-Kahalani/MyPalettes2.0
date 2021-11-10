@@ -22,7 +22,7 @@ export default function LevelSlider() {
 				</Typography>
 				<Slider
 					aria-label='Format'
-					defaultValue={level}
+					defaultValue={500}
 					valueLabelDisplay='off'
 					step={100}
 					marks

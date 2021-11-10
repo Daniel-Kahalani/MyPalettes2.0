@@ -1,5 +1,5 @@
 import { styled } from '@mui/system';
-import { Typography, Box, Paper } from '@mui/material';
+import { Typography, Paper } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import Star from '@mui/icons-material/Star';
 

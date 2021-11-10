@@ -13,6 +13,25 @@ export default function MobileMenu({
 	handleSignOut,
 }) {
 	const { isAuthenticated } = useSelector((state) => state.user);
+
+	const unAuthMenuItems = [
+		<MenuItem
+			key='signUp'
+			onClick={() => {
+				toggleOpen();
+				handleSignUp();
+			}}>
+			Sign Up
+		</MenuItem>,
+		<MenuItem
+			key='signIn'
+			onClick={() => {
+				toggleOpen();
+				handleSignIn();
+			}}>
+			Sign In
+		</MenuItem>,
+	];
 	return (
 		<Menu
 			sx={{ display: { xs: 'flex', md: 'none' } }}
@@ -60,22 +79,7 @@ export default function MobileMenu({
 					Logout
 				</MenuItem>
 			) : (
-				<>
-					<MenuItem
-						onClick={() => {
-							toggleOpen();
-							handleSignUp();
-						}}>
-						Sign Up
-					</MenuItem>
-					<MenuItem
-						onClick={() => {
-							toggleOpen();
-							handleSignIn();
-						}}>
-						Sign In
-					</MenuItem>
-				</>
+				unAuthMenuItems
 			)}
 		</Menu>
 	);

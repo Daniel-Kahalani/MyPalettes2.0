@@ -34,9 +34,8 @@ export default function PaletteMetaDialog({ open, toggleOpen }) {
 	const { list: colors } = useSelector((state) => state.colors);
 	const steps = ['Choose a Name', 'Pick an Emoji'];
 	const [errorText, setErrorText] = useState('');
-	const [activeStep, toggleStep, resetSteps] = useToggleState(steps);
-	const [newPaletteName, handlePalleteNameChange, resetPaletteName] =
-		useInputState('');
+	const [activeStep, toggleStep] = useToggleState(steps);
+	const [newPaletteName, handlePalleteNameChange] = useInputState('');
 
 	const handleSubmit = async (emoji) => {
 		const resultAction = await dispatch(
@@ -72,7 +71,7 @@ export default function PaletteMetaDialog({ open, toggleOpen }) {
 	return (
 		<Dialog open={open} onClose={toggleOpen}>
 			<DialogTitle id='form-dialog-title'>
-				<Typography component='h3' variant='h4' align='center'>
+				<Typography variant='h4' align='center'>
 					NEW PALETTE
 				</Typography>
 				<Stepper activeStep={steps.indexOf(activeStep)} sx={{ pt: 3 }}>
@@ -91,7 +90,7 @@ export default function PaletteMetaDialog({ open, toggleOpen }) {
 							its unique!
 						</DialogContentText>
 						<FormControl
-							error={errorText}
+							error={errorText ? true : false}
 							variant='standard'
 							fullWidth
 							margin='normal'>

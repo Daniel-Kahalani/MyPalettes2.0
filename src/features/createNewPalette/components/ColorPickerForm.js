@@ -71,8 +71,7 @@ export default function ColorPickerForm() {
 					variant='contained'
 					type='submit'
 					disabled={isPaletteFull}
-					isPaletteFull={isPaletteFull}
-					currentColor={currentColor}>
+					currentcolor={isPaletteFull ? 'gray' : currentColor}>
 					{isPaletteFull ? 'Palette Full' : 'Add Color'}
 				</AddColorButton>
 			</ValidatorForm>

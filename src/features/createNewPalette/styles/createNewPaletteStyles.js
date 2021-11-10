@@ -48,22 +48,20 @@ export const DrawerHeader = styled('div')(({ theme }) => ({
 	justifyContent: 'flex-end',
 }));
 
-export const AddColorButton = styled(Button)(
-	({ theme, isPaletteFull, currentColor }) => ({
-		width: '100%',
-		padding: '1rem',
-		marginTop: '1rem',
-		fontSize: '2rem',
-		backgroundColor: isPaletteFull ? 'gray' : currentColor,
-		color:
-			chroma.contrast(currentColor, 'white') < 4.5
-				? theme.palette.grey[700]
-				: theme.palette.grey[300],
-		':hover ': {
-			backgroundColor: isPaletteFull ? 'gray' : currentColor,
-		},
-	})
-);
+export const AddColorButton = styled(Button)(({ theme, currentcolor }) => ({
+	width: '100%',
+	padding: '1rem',
+	marginTop: '1rem',
+	fontSize: '2rem',
+	backgroundColor: currentcolor,
+	color:
+		chroma.contrast(currentcolor, 'white') < 4.5
+			? theme.palette.grey[700]
+			: theme.palette.grey[300],
+	':hover ': {
+		backgroundColor: currentcolor,
+	},
+}));
 
 export const Main = styled(Box, {
 	shouldForwardProp: (prop) => prop !== 'open',
