@@ -10,7 +10,6 @@ import {
 	where,
 	arrayUnion,
 	arrayRemove,
-	orderBy,
 } from 'firebase/firestore';
 
 const initialState = {
@@ -36,8 +35,7 @@ export const getLibraryPalettesList = createAsyncThunk(
 			const palettesSnapshot = await getDocs(
 				query(
 					collection(db, 'palettes'),
-					where('__name__', 'in', library),
-					orderBy('timestamp')
+					where('__name__', 'in', library)
 				)
 			);
 			return !palettesSnapshot.empty

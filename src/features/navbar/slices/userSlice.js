@@ -71,6 +71,7 @@ export const login = createAsyncThunk(
 			);
 			return await createUserData(userCredential.user.uid);
 		} catch (e) {
+			console.log(e);
 			if (
 				e.code === 'auth/user-not-found' ||
 				e.code === 'auth/wrong-password'

@@ -22,8 +22,8 @@ export default function RemovePaletteDialog({
 	const dispatch = useDispatch();
 
 	const handleRemovePalette = async () => {
-		const resultAction = await dispatch(removePaletteToLibrary(paletteId));
 		toggleOpen();
+		const resultAction = await dispatch(removePaletteToLibrary(paletteId));
 		handleRemoveFeedback(resultAction);
 	};
 
@@ -33,7 +33,7 @@ export default function RemovePaletteDialog({
 			onClose={toggleOpen}
 			aria-labelledby='delete-dialog-title'>
 			<DialogTitle id='delete-dialog-title'>
-				Delete This Palette?
+				Remove This Palette?
 				<List>
 					<ListItem button onClick={handleRemovePalette}>
 						<ListItemAvatar>

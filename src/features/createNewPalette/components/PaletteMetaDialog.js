@@ -27,6 +27,7 @@ import {
 	Typography,
 } from '@mui/material';
 import 'emoji-mart/css/emoji-mart.css';
+import { Box } from '@mui/system';
 
 export default function PaletteMetaDialog({ open, toggleOpen }) {
 	const history = useHistory();
@@ -70,7 +71,7 @@ export default function PaletteMetaDialog({ open, toggleOpen }) {
 
 	return (
 		<Dialog open={open} onClose={toggleOpen}>
-			<DialogTitle id='form-dialog-title'>
+			<Box id='form-dialog-title' sx={{ padding: '1rem' }}>
 				<Typography variant='h4' align='center'>
 					NEW PALETTE
 				</Typography>
@@ -81,7 +82,7 @@ export default function PaletteMetaDialog({ open, toggleOpen }) {
 						</Step>
 					))}
 				</Stepper>
-			</DialogTitle>
+			</Box>
 			<DialogContent>
 				{steps.indexOf(activeStep) === 0 ? (
 					<>
