@@ -1,5 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import {
+	getFirestore,
+	collection,
+	query,
+	getDocs,
+	orderBy,
+} from 'firebase/firestore';
 
 const initialState = {
 	list: [],
@@ -12,9 +18,12 @@ export const getPalettesList = createAsyncThunk(
 	async (_, { getState, rejectWithValue }) => {
 		try {
 			const db = getFirestore();
-			const query = await getDocs(collection(db, 'palettes'));
-			return query.docs.map((doc) => {
-				return { id: doc.id, ...doc.data() };
+			const palettesSnapshot = await getDocs(
+				query(collection(db, 'palettes'), orderBy('timestamp'))
+			);
+			return palettesSnapshot.docs.map((doc) => {
+				const { timestamp, ...data } = doc.data();
+				return { id: doc.id, ...data };
 			});
 		} catch (e) {
 			throw rejectWithValue(e);

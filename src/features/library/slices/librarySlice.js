@@ -10,6 +10,7 @@ import {
 	where,
 	arrayUnion,
 	arrayRemove,
+	orderBy,
 } from 'firebase/firestore';
 
 const initialState = {
@@ -35,12 +36,14 @@ export const getLibraryPalettesList = createAsyncThunk(
 			const palettesSnapshot = await getDocs(
 				query(
 					collection(db, 'palettes'),
-					where('__name__', 'in', library)
+					where('__name__', 'in', library),
+					orderBy('timestamp')
 				)
 			);
 			return !palettesSnapshot.empty
 				? palettesSnapshot.docs.map((doc) => {
-						return { id: doc.id, ...doc.data() };
+						const { timestamp, ...data } = doc.data();
+						return { id: doc.id, ...data };
 				  })
 				: [];
 		} catch (e) {

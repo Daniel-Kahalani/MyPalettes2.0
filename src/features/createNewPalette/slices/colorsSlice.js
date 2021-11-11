@@ -7,6 +7,7 @@ import {
 	collection,
 	where,
 	limit,
+	serverTimestamp,
 } from 'firebase/firestore';
 import { arrayMoveImmutable } from 'array-move';
 import { getRandomColor } from '../../../utils/colorHelper';
@@ -22,10 +23,10 @@ export const addNewPalette = createAsyncThunk(
 	async (palette, { rejectWithValue, getState }) => {
 		try {
 			const db = getFirestore();
-			const newPaletteDoc = await addDoc(
-				collection(db, 'palettes'),
-				palette
-			);
+			const newPaletteDoc = await addDoc(collection(db, 'palettes'), {
+				...palette,
+				timestamp: serverTimestamp(),
+			});
 			return newPaletteDoc.id;
 		} catch (e) {
 			throw rejectWithValue(e);

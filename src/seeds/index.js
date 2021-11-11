@@ -1,5 +1,10 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import {
+	getFirestore,
+	collection,
+	addDoc,
+	serverTimestamp,
+} from 'firebase/firestore';
 import seedPalettes from './palettes.js';
 
 const firebaseConfig = {
@@ -17,7 +22,10 @@ const db = getFirestore();
 
 try {
 	for (const palette of seedPalettes) {
-		const docRef = await addDoc(collection(db, 'palettes'), palette);
+		const docRef = await addDoc(collection(db, 'palettes'), {
+			...palette,
+			timestamp: serverTimestamp(),
+		});
 		console.log('Document written with ID: ', docRef.id);
 	}
 } catch (e) {
